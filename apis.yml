@@ -1,0 +1,29 @@
+aid: noms
+name: Noms
+description: 'Noms is a company surfaced via the API Evangelist harvest backlog (source: new-submission)
+  and added to the network as a stub for full-pipeline profiling.'
+url: https://raw.githubusercontent.com/api-evangelist/noms/refs/heads/main/apis.yml
+x-type: company
+x-source: harvest:new-submission
+x-tier: stub
+x-tier-reason: harvest
+specificationVersion: '0.20'
+created: '2026-09-28'
+modified: '2026-09-28'
+tags:
+- Company
+apis: []
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
+- FN: APIs.json
+  email: info@apis.io
+common:
+- type: Website
+  url: https://noms.sh
+- type: Documentation
+  url: https://noms.sh/docs
+x-submission-notes: Nutrition data API (3.7M foods, 298K brands). apis.json https://noms.sh/apis.json;
+  OpenAPI https://api.noms.sh/openapi.json; Postman collection linked from apis.json
+x-submission-probe: root 200, invented 404, apis.json 200, OpenAPI 3.1 (10 paths, server api.noms.sh)
+x-submitted-by: support@noms.sh (apis.io/add, 2026-09-28)
