@@ -1,0 +1,31 @@
+# Noms
+
+> Noms is a REST API for nutrition data: foods, brands, nutrients and food groups, with barcode lookup and nutrient values per 100 g or 100 ml.
+
+## Using the API
+
+- Base URL: `https://api.noms.sh`. Every endpoint is under `/v1`.
+- Send an API key in the `X-API-Key` header on every request. `Authorization: Bearer <key>` also works.
+- A list returns `{data, links, meta}`. Follow `links.next` for the next page. A single item returns `{data}`.
+- Errors are RFC 9457 problem details. Each one carries a `doc_url` that links to its entry in the reference.
+
+## Docs
+
+- [Overview](https://noms.sh/docs.md): The developer guide for the Noms food data API. Get a key, make your first request, and take the example queries straight into your app.
+- [Quickstart](https://noms.sh/docs/quickstart.md): Make your first request to the Noms API in five minutes, with curl, JavaScript, and Python examples.
+- [Nutrition data](https://noms.sh/docs/nutrition.md): How Noms reports nutrient values: per-100 basis units, serving sizes, and the conversion to an amount per serving.
+- [Authentication](https://noms.sh/docs/authentication.md): How to get a Noms API key and authenticate your requests with the X-API-Key header.
+- [Querying & data model](https://noms.sh/docs/querying.md): Search, filter, sort, paginate and shape responses from the Noms food data API.
+- [Common scenarios](https://noms.sh/docs/scenarios.md): Copy-paste example queries for barcode lookup, typo-tolerant search, nutrition breakdowns and nutrient ranking.
+- [Rate limits & quotas](https://noms.sh/docs/rate-limits.md): Tier quotas, RateLimit headers, handling 429s and reading your usage on the Noms API.
+- [Support](https://noms.sh/docs/support.md): How to reach Noms support, response times by tier and the public status page.
+
+## API reference
+
+- [OpenAPI document](https://api.noms.sh/openapi.json): OpenAPI 3.1 description of every endpoint, parameter, response field and error type.
+- [Interactive reference](https://api.noms.sh/docs): The same reference as a browsable page, with runnable examples.
+
+## Optional
+
+- [Pricing](https://noms.sh/#pricing): Plans, request quotas and prices.
+- [Docs in Spanish](https://noms.sh/es/docs): The same guide, written in Spanish.

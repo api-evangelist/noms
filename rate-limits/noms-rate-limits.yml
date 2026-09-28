@@ -1,0 +1,49 @@
+generated: '2026-09-28'
+method: searched
+generator: extract-docs-artifacts.py (local)
+source: https://noms.sh/docs/rate-limits.md
+sources:
+- https://noms.sh/docs/rate-limits.md
+- https://noms.sh/docs/rate-limits
+name: Noms rate limits
+limits:
+- name: quota
+  limit_text: 250 per day
+  max: 250
+  window: per day
+  scope: account
+  plan: Taster
+- name: quota
+  limit_text: 250,000 per month
+  max: 250000
+  window: per month
+  scope: account
+  plan: Sous Chef
+- name: quota
+  limit_text: 2,000,000 per month
+  max: 2000000
+  window: per month
+  scope: account
+  plan: Head Chef
+- name: burst
+  limit_text: 1 request/sec
+  max: 1
+  window: second
+  scope: account
+  plan: Taster
+  burst: up to 10 at once
+- name: burst
+  limit_text: 10 requests/sec
+  max: 10
+  window: second
+  scope: account
+  plan: Sous Chef
+  burst: up to 50 at once
+headers:
+- RateLimit-Limit
+- RateLimit-Remaining
+- RateLimit-Reset
+- X-RateLimit-Reset
+- Retry-After
+exhaustion_status: 429
+docs: https://noms.sh/docs/rate-limits.md

@@ -1,29 +1,193 @@
 aid: noms
+
 name: Noms
-description: 'Noms is a company surfaced via the API Evangelist harvest backlog (source: new-submission)
-  and added to the network as a stub for full-pipeline profiling.'
+
+image: https://noms.sh/og-image.png
+
+description: Noms provides a comprehensive nutrition data API covering 3.7 million foods and 298,000 brands across 230 countries. The service
+  offers detailed nutrient information, barcode lookup, and food images, all accessible via a RESTful interface. It includes a free tier with
+  no credit card required, extensive documentation, and support resources to help developers integrate nutritional data into applications.
+
 url: https://raw.githubusercontent.com/api-evangelist/noms/refs/heads/main/apis.yml
+
 x-type: company
+
 x-source: harvest:new-submission
-x-tier: stub
-x-tier-reason: harvest
+
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-09-28 (modular-v1; was harvest)
+
 specificationVersion: '0.20'
+
 created: '2026-09-28'
+
 modified: '2026-09-28'
+
 tags:
 - Company
-apis: []
+- nutrition
+- food
+- API
+- data
+- health
+
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+
 common:
+- type: AgenticAccess
+  url: agentic-access/noms-agentic-access.yml
+- type: RateLimits
+  url: rate-limits/noms-rate-limits.yml
+- type: Plans
+  url: plans/noms-plans-pricing.yml
+- type: Spectral
+  url: rules/noms-rules.yml
+- type: JSONLD
+  url: json-ld/noms-context.jsonld
+- type: Vocabulary
+  url: vocabulary/noms-vocabulary.yml
+- type: DataModel
+  url: data-model/noms-data-model.yml
+- type: Conventions
+  url: conventions/noms-conventions.yml
+- type: Security
+  url: security/noms-vulnerability-disclosure.yml
+- type: Authentication
+  url: authentication/noms-authentication.yml
+- type: ErrorCatalog
+  url: errors/noms-problem-types.yml
+- type: Conformance
+  url: conformance/noms-conformance.yml
+- type: LLMsTxt
+  url: llms/noms-llms.txt
+- type: SecurityTxt
+  url: well-known/noms-security.txt
+- type: WellKnown
+  url: well-known/noms-well-known.yml
+- type: Hosts
+  url: hosts/noms-hosts.yml
+- type: Vendors
+  url: vendors/noms-vendors.yml
+- type: Login
+  url: https://noms.sh/login
+- type: APIReference
+  url: https://noms.sh/llms.txt
+- type: VulnerabilityDisclosure
+  url: security/noms-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/noms-domain-security.yml
 - type: Website
   url: https://noms.sh
 - type: Documentation
   url: https://noms.sh/docs
-x-submission-notes: Nutrition data API (3.7M foods, 298K brands). apis.json https://noms.sh/apis.json;
-  OpenAPI https://api.noms.sh/openapi.json; Postman collection linked from apis.json
+- type: GettingStarted
+  url: https://noms.sh/docs/quickstart
+- type: Authentication
+  url: https://noms.sh/docs/authentication
+- type: Pricing
+  url: https://noms.sh/pricing
+- type: Signup
+  url: https://noms.sh/signup
+- type: TermsOfService
+  url: https://noms.sh/terms
+- type: PrivacyPolicy
+  url: https://noms.sh/privacy
+- type: Support
+  url: https://noms.sh/docs/support
+- type: PostmanCollection
+  url: https://www.postman.com/noms-sh/noms-api/collection/r0dxcen/noms-api
+
+apis:
+- name: Noms API
+  description: REST API for nutrition data covering 3.7M foods and 298K brands.
+  humanURL: https://noms.sh/docs
+  baseURL: https://api.noms.sh/v1
+  openAPI:
+    url: openapi/noms-openapi.json
+    type: OpenAPI
+  aid: noms:noms-api
+- aid: noms:noms-brands-api
+  name: Noms Brands API
+  description: >-
+    The brand catalog — the names foods are sold under, and the `/v1/brands/{id}` handle each `brand_id`
+    points at.
+  humanURL: https://noms.sh/docs
+  baseURL: https://api.noms.sh/v1
+  tags:
+  - brands
+  properties:
+  - type: OpenAPI
+    url: openapi/noms-brands-api-openapi.yml
+- aid: noms:noms-foodgroups-api
+  name: Noms Food Groups API
+  description: The canonical food-group catalog.
+  humanURL: https://noms.sh/docs
+  baseURL: https://api.noms.sh/v1
+  tags:
+  - foodGroups
+  properties:
+  - type: OpenAPI
+    url: openapi/noms-foodgroups-api-openapi.yml
+- aid: noms:noms-foods-api
+  name: Noms Foods API
+  description: >-
+    The food catalog. Search, filter, sort, and embed related brand / food-group / nutrient detail via
+    `include=`.
+  humanURL: https://noms.sh/docs
+  baseURL: https://api.noms.sh/v1
+  tags:
+  - foods
+  properties:
+  - type: OpenAPI
+    url: openapi/noms-foods-api-openapi.yml
+- aid: noms:noms-market-api
+  name: Noms Market API
+  description: >-
+    Read and set your account's market. Free-tier accounts serve one chosen market, shared by every key
+    they own; set it before querying foods (paid plans serve all markets).
+  humanURL: https://noms.sh/docs
+  baseURL: https://api.noms.sh/v1
+  tags:
+  - market
+  properties:
+  - type: OpenAPI
+    url: openapi/noms-market-api-openapi.yml
+- aid: noms:noms-nutrients-api
+  name: Noms Nutrients API
+  description: The canonical nutrient catalog (codes, units, hierarchy).
+  humanURL: https://noms.sh/docs
+  baseURL: https://api.noms.sh/v1
+  tags:
+  - nutrients
+  properties:
+  - type: OpenAPI
+    url: openapi/noms-nutrients-api-openapi.yml
+- aid: noms:noms-usage-api
+  name: Noms Usage API
+  description: >-
+    Your **account's** usage against its quota for the current window — the total across every key you
+    hold, which is what enforcement compares against. Poll it to see where you stand before hitting the
+    limit.
+  humanURL: https://noms.sh/docs
+  baseURL: https://api.noms.sh/v1
+  tags:
+  - usage
+  properties:
+  - type: OpenAPI
+    url: openapi/noms-usage-api-openapi.yml
+x-submission-notes: Nutrition data API (3.7M foods, 298K brands). apis.json https://noms.sh/apis.json; OpenAPI https://api.noms.sh/openapi.json;
+  Postman collection linked from apis.json
+
 x-submission-probe: root 200, invented 404, apis.json 200, OpenAPI 3.1 (10 paths, server api.noms.sh)
+
 x-submitted-by: support@noms.sh (apis.io/add, 2026-09-28)
+x-enrichment:
+  date: '2026-09-28'
+  status: enriched
+  artifacts_added: 21
+  pass: modular-v1
+  engine: identity=local,contract=local,surfaces=local,docs=local,regulatory=local

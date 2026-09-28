@@ -1,0 +1,26 @@
+generated: '2026-09-28'
+method: searched
+generator: extract-docs-artifacts.py (local)
+source: https://noms.sh/docs/rate-limits
+sources:
+- https://noms.sh/docs/rate-limits
+- https://noms.sh/docs/quickstart.md
+- https://noms.sh/docs/quickstart
+- https://noms.sh/docs/authentication.md
+idempotency:
+  coverage: none
+pagination:
+  style: cursor
+  params:
+  - page_size
+  - cursor
+  response_fields:
+  - links.self
+  - links.next
+  - meta.has_more
+  - meta.page_size
+error_envelope: problem document with fields type, title, status, detail, doc_url
+authentication: 'API key via X-API-Key header or Authorization: Bearer <key>'
+rate_limit_signaling: RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset, X-RateLimit-Reset
+field_expansion: include query parameter (e.g., include=nutrients,brand)
+docs: https://noms.sh/docs/rate-limits

@@ -1,0 +1,69 @@
+generated: '2026-09-28'
+method: derived
+generator: derive-mcp-candidate.py
+source:
+- openapi/noms-openapi.json
+status: candidate
+deployment:
+  mode: none
+  auth: unknown
+  verified: probed
+note: No MCP server was found. The pre-flight posted tools/list to /mcp on noms.sh, api.noms.sh, status.noms.sh, data.noms.sh; verdict absent.
+  Candidate tools below are derived from the 11 operation(s) in the provider's own OpenAPI (11 listed); they describe what a server WOULD expose,
+  not one that exists.
+tools:
+- name: foods_list_foods
+  operationId: foodsListFoods
+  method: GET
+  path: /v1/foods
+  description: List foods
+- name: foods_get_food
+  operationId: foodsGetFood
+  method: GET
+  path: /v1/foods/{id}
+  description: Get a food
+- name: nutrients_list_nutrients
+  operationId: nutrientsListNutrients
+  method: GET
+  path: /v1/nutrients
+  description: List nutrients
+- name: nutrients_get_nutrient
+  operationId: nutrientsGetNutrient
+  method: GET
+  path: /v1/nutrients/{id}
+  description: Get a nutrient
+- name: food_groups_list_food_groups
+  operationId: foodGroupsListFoodGroups
+  method: GET
+  path: /v1/food-groups
+  description: List food groups
+- name: food_groups_get_food_group
+  operationId: foodGroupsGetFoodGroup
+  method: GET
+  path: /v1/food-groups/{id}
+  description: Get a food group
+- name: brands_list_brands
+  operationId: brandsListBrands
+  method: GET
+  path: /v1/brands
+  description: List brands
+- name: brands_get_brand
+  operationId: brandsGetBrand
+  method: GET
+  path: /v1/brands/{id}
+  description: Get a brand
+- name: usage_usage
+  operationId: usageUsage
+  method: GET
+  path: /v1/usage
+  description: Get your usage and quota
+- name: market_get_market
+  operationId: marketGetMarket
+  method: GET
+  path: /v1/market
+  description: Get your market selection
+- name: market_set_market
+  operationId: marketSetMarket
+  method: PUT
+  path: /v1/market
+  description: Set your market selection

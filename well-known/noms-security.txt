@@ -1,0 +1,8 @@
+# noms.sh security contact — RFC 9116 (https://www.rfc-editor.org/rfc/rfc9116).
+# Served from the Pages web app at https://noms.sh/.well-known/security.txt.
+# `Expires` must stay in the future; bump it (≈yearly) before it lapses or the
+# file is considered stale.
+Contact: mailto:security@noms.sh
+Expires: 2027-06-11T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://noms.sh/.well-known/security.txt

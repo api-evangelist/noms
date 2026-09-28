@@ -1,0 +1,241 @@
+openapi: 3.2.0
+info:
+  title: Noms Usage API
+  summary: 'A REST API for nutritional data: foods, brands, nutrients and food groups.'
+  description: '**Noms** is a REST API for nutritional data: **foods**, **brands**, **nutrients**
+
+    and **food groups**.'
+  contact:
+    name: Noms
+    url: https://noms.sh/
+    email: support@noms.sh
+  license:
+    name: Proprietary — © Noms, all rights reserved
+  version: v1
+  x-logo:
+    url: /wordmark.svg
+    backgroundColor: '#ffffff'
+    altText: Noms
+    href: https://noms.sh
+servers:
+- url: https://api.noms.sh
+  description: Production
+tags:
+- name: Usage
+  description: Your **account's** usage against its quota for the current window — the total across every key you hold, which is what enforcement compares against. Poll it to see where you stand before hitting the limit.
+  x-displayName: Usage
+paths:
+  /v1/usage:
+    get:
+      tags:
+      - Usage
+      summary: Get your usage and quota
+      description: 'Return the calling account''s current-window usage against its quota.
+
+
+        Reports the **account** total — the sum across every API key you own, which
+
+        is the number quota enforcement actually compares against. Holding
+
+        several keys does not raise the allowance; they share one. The same numbers
+
+        back the `RateLimit-*` headers on every metered response, so this endpoint and
+
+        a `429` can never disagree.
+
+
+        An account with no requests yet in the window reports `request_count: 0`.
+
+        This read is itself exempt from metering, so calling it does not consume
+
+        quota — it stays reachable even while you are over cap.'
+      operationId: usageUsage
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageResponse'
+        '401':
+          description: Authentication is missing or invalid.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              example:
+                type: /problems/unauthorized
+                title: Unauthorized
+                status: 401
+                detail: Valid authentication is required to access this resource.
+                doc_url: https://api.noms.sh/docs#tag/unauthorized
+        '503':
+          description: The service is temporarily unable to handle the request; retry shortly.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              example:
+                type: /problems/service-unavailable
+                title: Service unavailable
+                status: 503
+                detail: The service is briefly unavailable; retry shortly.
+                doc_url: https://api.noms.sh/docs#tag/service-unavailable
+      security:
+      - ApiKey: []
+components:
+  schemas:
+    UsageData:
+      properties:
+        tier:
+          $ref: '#/components/schemas/Tier'
+          description: The account's access tier.
+        quota_window:
+          $ref: '#/components/schemas/QuotaWindow'
+          description: 'The window the quota is measured over: `daily` (a rolling 24 hours) for the free tier, `monthly` (your billing period) for paid.'
+        request_quota:
+          type: integer
+          title: Request Quota
+          description: The maximum number of requests allowed in the window, across every API key on your account. Normally your tier's allowance; if support has granted your account a custom one, this reports that instead — it is always the number actually enforced.
+        request_count:
+          type: integer
+          title: Request Count
+          description: Requests counted against the account in the current window so far, summed across all your keys. Reading this endpoint does not count.
+        remaining:
+          type: integer
+          title: Remaining
+          description: Requests left in the current window (`request_quota - request_count`, floored at 0).
+        period_end:
+          type: string
+          format: date-time
+          title: Period End
+          description: When allowance next frees up (ISO 8601, UTC). On the rolling free window this is the top of the next hour, as the oldest counted hour falls out of the trailing 24; on a paid tier it is the next billing-period boundary.
+      type: object
+      required:
+      - tier
+      - quota_window
+      - request_quota
+      - request_count
+      - remaining
+      - period_end
+      title: UsageData
+      description: The calling **account's** usage against its quota for the current window.
+    Problem:
+      properties:
+        title:
+          type: string
+          title: Problem title
+          description: Short, human-readable summary of the problem type.
+        type:
+          type: string
+          title: Problem type
+          description: Stable problem-type URI under `/problems/<slug>`. Relative, so it resolves against the host that served the response. The slug is never renamed — branch on this, not on `title` or `detail`.
+        status:
+          type: integer
+          title: Status code
+          description: The HTTP status code, repeated in the body.
+        detail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Problem detail
+          description: 'Human-readable explanation of *this* occurrence. Free text: it may name concrete values and may change without notice.'
+        doc_url:
+          type: string
+          title: Documentation URL
+          description: Deep link to this problem's entry in these docs, stamped per request against the host that served it. Present on every problem body.
+      type: object
+      required:
+      - type
+      - title
+      - status
+      title: Problem
+      description: 'An **RFC 9457** problem document, served as `application/problem+json`. `type` is a stable, never-renamed URI you can branch on; the other core members are for humans.
+
+
+        Individual problems add **extension members** on top of these — `retry_after` on a `429`, `supported_columns` on an invalid sort, `errors` on a validation failure. They are documented on the problem itself, under Problems, and a client should ignore any member it does not recognise rather than reject the body.'
+    UsageResponse:
+      properties:
+        data:
+          $ref: '#/components/schemas/UsageData'
+      type: object
+      required:
+      - data
+      title: UsageResponse
+      examples:
+      - data:
+          period_end: '2026-06-17T10:00:00Z'
+          quota_window: daily
+          remaining: 208
+          request_count: 42
+          request_quota: 250
+          tier: taster
+    QuotaWindow:
+      type: string
+      enum:
+      - daily
+      - monthly
+      title: QuotaWindow
+      description: 'The window over which the **account''s** request quota is measured.
+
+
+        ``daily`` is a rolling 24-hour window. ``monthly`` is the account''s billing
+
+        period, starting from its renewal date.'
+    Tier:
+      type: string
+      enum:
+      - taster
+      - sous_chef
+      - head_chef
+      title: Tier
+      description: 'The API access tier assigned to this **account**.
+
+
+        One of ``taster`` (free), ``sous_chef`` (paid), or ``head_chef`` (paid).'
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      description: Programmatic access key for the `/v1` resource endpoints. Send it as the `X-API-Key` header (`noms_sk_<env>_...`). Create one in your dashboard under **API Keys → Create key**; the raw key is shown once and never stored. Your account's tier governs which data you can read, and every key you own draws on the same request allowance.
+      in: header
+      name: X-API-Key
+x-tagGroups:
+- name: Resources
+  tags:
+  - foods
+  - brands
+  - nutrients
+  - foodGroups
+- name: Usage
+  tags:
+  - usage
+  - market
+- name: Problems
+  tags:
+  - invalid-cursor
+  - invalid-filter
+  - invalid-sort
+  - invalid-include
+  - invalid-fields
+  - invalid-page-size
+  - unknown-query-param
+  - not-found
+  - unauthorized
+  - maintenance
+  - quota-exceeded
+  - rate-limited
+  - enumeration-forbidden
+  - result-depth-exceeded
+  - market-not-selected
+  - unknown-market
+  - market-not-applicable
+  - market-account-required
+  - key-revoked
+  - key-limit-reached
+  - forbidden
+  - service-unavailable
+  - search-timeout
+  - search-unavailable
+  - api-version-removed
+  - validation-error
+  - internal-server-error

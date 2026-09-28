@@ -1,0 +1,24 @@
+generated: '2026-09-28'
+method: searched
+generator: extract-docs-artifacts.py (local)
+source: https://noms.sh/docs/authentication.md
+sources:
+- https://noms.sh/docs/authentication.md
+- https://noms.sh/docs/authentication
+- https://noms.sh/docs/quickstart.md
+- https://noms.sh/docs/quickstart
+description: Authentication & API keys
+schemes:
+- type: apiKey
+  name: API Key
+  evidence: 'Send your key in the `X-API-Key` header on every request:'
+  location: header
+  header: X-API-Key
+  how_to_obtain: Sign up at https://noms.sh/signup, verify your email, then mint a key from your dashboard (Dashboard → API Keys → Create key).
+- type: http-bearer
+  name: Bearer Token
+  evidence: '`Authorization: Bearer <key>` is accepted and behaves identically to `X-API-Key`.'
+  location: header
+  header: Authorization
+  how_to_obtain: Sign up at https://noms.sh/signup, verify your email, then mint a key from your dashboard (Dashboard → API Keys → Create key).
+docs: https://noms.sh/docs/authentication.md

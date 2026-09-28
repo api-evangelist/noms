@@ -1,0 +1,221 @@
+{
+  "@context": {
+    "@vocab": "https://noms.sh/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "noms": "https://noms.sh/schema#",
+    "BrandDetailSchema": "noms:BrandDetailSchema",
+    "id": {
+      "@id": "noms:id",
+      "@type": "xsd:string"
+    },
+    "name": {
+      "@id": "noms:name"
+    },
+    "canonical_id": {
+      "@id": "noms:canonical_id"
+    },
+    "BrandSchema": "noms:BrandSchema",
+    "FoodDetailSchema": "noms:FoodDetailSchema",
+    "barcode": {
+      "@id": "noms:barcode"
+    },
+    "description": {
+      "@id": "noms:description"
+    },
+    "scientific_name": {
+      "@id": "noms:scientific_name"
+    },
+    "country_of_origin": {
+      "@id": "noms:country_of_origin"
+    },
+    "ingredients_text": {
+      "@id": "noms:ingredients_text"
+    },
+    "is_foundational": {
+      "@id": "noms:is_foundational"
+    },
+    "basis_unit": {
+      "@id": "noms:basis_unit",
+      "@type": "xsd:string"
+    },
+    "brand_id": {
+      "@id": "noms:brand_id"
+    },
+    "food_group_id": {
+      "@id": "noms:food_group_id"
+    },
+    "brand": {
+      "@id": "noms:brand"
+    },
+    "food_group": {
+      "@id": "noms:food_group"
+    },
+    "nutrients": {
+      "@id": "noms:nutrients"
+    },
+    "serving_sizes": {
+      "@id": "noms:serving_sizes"
+    },
+    "images": {
+      "@id": "noms:images"
+    },
+    "market_countries": {
+      "@id": "noms:market_countries"
+    },
+    "FoodGroupSchema": "noms:FoodGroupSchema",
+    "icon_url": {
+      "@id": "noms:icon_url"
+    },
+    "FoodImageSchema": "noms:FoodImageSchema",
+    "url": {
+      "@id": "noms:url",
+      "@type": "xsd:string"
+    },
+    "type": {
+      "@id": "noms:type",
+      "@type": "xsd:string"
+    },
+    "FoodMarketCountrySchema": "noms:FoodMarketCountrySchema",
+    "country_code": {
+      "@id": "noms:country_code",
+      "@type": "xsd:string"
+    },
+    "FoodNutrientSchema": "noms:FoodNutrientSchema",
+    "value": {
+      "@id": "noms:value",
+      "@type": "xsd:string"
+    },
+    "unit": {
+      "@id": "noms:unit"
+    },
+    "FoodServingSizeSchema": "noms:FoodServingSizeSchema",
+    "descriptor": {
+      "@id": "noms:descriptor"
+    },
+    "quantity": {
+      "@id": "noms:quantity",
+      "@type": "xsd:string"
+    },
+    "grams": {
+      "@id": "noms:grams"
+    },
+    "milliliters": {
+      "@id": "noms:milliliters"
+    },
+    "is_default": {
+      "@id": "noms:is_default",
+      "@type": "xsd:boolean"
+    },
+    "Item_BrandDetailSchema_": "noms:Item_BrandDetailSchema_",
+    "data": {
+      "@id": "noms:data",
+      "@type": "@id"
+    },
+    "Item_FoodDetailSchema_": "noms:Item_FoodDetailSchema_",
+    "Item_FoodGroupSchema_": "noms:Item_FoodGroupSchema_",
+    "Item_NutrientSchema_": "noms:Item_NutrientSchema_",
+    "MarketChoice": "noms:MarketChoice",
+    "market": {
+      "@id": "noms:market",
+      "@type": "xsd:string"
+    },
+    "MarketData": "noms:MarketData",
+    "chosen": {
+      "@id": "noms:chosen"
+    },
+    "available": {
+      "@id": "noms:available",
+      "@container": "@list"
+    },
+    "note": {
+      "@id": "noms:note"
+    },
+    "MarketResponse": "noms:MarketResponse",
+    "NutrientSchema": "noms:NutrientSchema",
+    "parent_id": {
+      "@id": "noms:parent_id"
+    },
+    "PageLinks": "noms:PageLinks",
+    "self": {
+      "@id": "noms:self",
+      "@type": "@id"
+    },
+    "next": {
+      "@id": "noms:next"
+    },
+    "PageMeta": "noms:PageMeta",
+    "has_more": {
+      "@id": "noms:has_more",
+      "@type": "xsd:boolean"
+    },
+    "page_size": {
+      "@id": "noms:page_size",
+      "@type": "xsd:integer"
+    },
+    "Page_BrandDetailSchema_": "noms:Page_BrandDetailSchema_",
+    "links": {
+      "@id": "noms:links",
+      "@type": "@id"
+    },
+    "meta": {
+      "@id": "noms:meta",
+      "@type": "@id"
+    },
+    "Page_FoodDetailSchema_": "noms:Page_FoodDetailSchema_",
+    "Page_FoodGroupSchema_": "noms:Page_FoodGroupSchema_",
+    "Page_NutrientSchema_": "noms:Page_NutrientSchema_",
+    "QuotaWindow": "noms:QuotaWindow",
+    "Tier": "noms:Tier",
+    "UsageData": "noms:UsageData",
+    "tier": {
+      "@id": "noms:tier",
+      "@type": "@id"
+    },
+    "quota_window": {
+      "@id": "noms:quota_window",
+      "@type": "@id"
+    },
+    "request_quota": {
+      "@id": "noms:request_quota",
+      "@type": "xsd:integer"
+    },
+    "request_count": {
+      "@id": "noms:request_count",
+      "@type": "xsd:integer"
+    },
+    "remaining": {
+      "@id": "noms:remaining",
+      "@type": "xsd:integer"
+    },
+    "period_end": {
+      "@id": "noms:period_end",
+      "@type": "xsd:dateTime"
+    },
+    "UsageResponse": "noms:UsageResponse",
+    "Problem": "noms:Problem",
+    "title": {
+      "@id": "noms:title",
+      "@type": "xsd:string"
+    },
+    "status": {
+      "@id": "noms:status",
+      "@type": "xsd:integer"
+    },
+    "detail": {
+      "@id": "noms:detail"
+    },
+    "doc_url": {
+      "@id": "noms:doc_url",
+      "@type": "xsd:string"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Noms API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Noms's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-09-28) from openapi/noms-openapi.json.",
+  "dcterms:created": "2026-09-28",
+  "dcterms:source": [
+    "openapi/noms-openapi.json"
+  ]
+}

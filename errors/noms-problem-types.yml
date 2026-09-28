@@ -1,0 +1,86 @@
+generated: '2026-09-28'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/noms-openapi.json
+format: rfc9457
+envelope:
+  media_type: application/problem+json
+  schema: Problem
+coverage:
+  operations: 11
+  statuses_declared: 10
+problems:
+- status: 400
+  title: Bad Request
+  description: 'Malformed request: an invalid query parameter, cursor, filter, sort, page size, include, or sparse-fieldset
+    selection.'
+  operations: 8
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 401
+  title: Unauthorized
+  description: Authentication is missing or invalid.
+  operations: 11
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 403
+  title: Forbidden
+  description: The request is authenticated but not permitted.
+  operations: 5
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 404
+  title: Not Found
+  description: No resource matches the requested id.
+  operations: 4
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 409
+  title: Conflict
+  description: The request conflicts with the current state of the resource.
+  operations: 1
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 422
+  title: Unprocessable Content
+  description: 'The request was well-formed but could not be processed: a parameter failed validation, or a value
+    is not one this resource accepts.'
+  operations: 9
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 429
+  title: Too Many Requests
+  description: 'The key exceeded a rate limit: either its per-window request quota or its short-window burst rate;
+    retry after the `Retry-After` interval (q'
+  operations: 8
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 500
+  title: Internal Server Error
+  description: An unexpected server error occurred.
+  operations: 8
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 503
+  title: Service Unavailable
+  description: The service is temporarily unable to handle the request; retry shortly.
+  operations: 11
+  media_types:
+  - application/problem+json
+  schema: Problem
+- status: 504
+  title: Gateway Timeout
+  description: The `?q=` search outran its time budget and was cancelled; narrow the query and retry.
+  operations: 4
+  media_types:
+  - application/problem+json
+  schema: Problem

@@ -1,0 +1,378 @@
+generated: '2026-09-28'
+method: derived
+generator: derive-vocabulary.py
+source: openapi/noms-openapi.json
+vocabulary:
+  name: Noms Domain Vocabulary
+  description: 'Terms declared by Noms''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions. Derived,
+    not authored.'
+  version: '2026-09-28'
+  terms:
+  - term: foods
+    definition: The food catalog. Search, filter, sort, and embed related brand / food-group / nutrient detail via `include=`.
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: brands
+    definition: The brand catalog — the names foods are sold under, and the `/v1/brands/{id}` handle each `brand_id` points at.
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: nutrients
+    definition: The canonical nutrient catalog (codes, units, hierarchy).
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: foodGroups
+    definition: The canonical food-group catalog.
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: usage
+    definition: Your **account's** usage against its quota for the current window — the total across every key you hold, which is what enforcement
+      compares against. Poll it to see where you stand before hitting the limit.
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: market
+    definition: Read and set your account's market. Free-tier accounts serve one chosen market, shared by every key they own; set it before querying
+      foods (paid plans serve all markets).
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: invalid-cursor
+    definition: '**Status:** `400` The pagination `cursor` could not be decoded: it was malformed or truncated. **Extension members:** `cursor`,
+      `reason` **Example** ```json { "type": "/problems/invalid-cursor", "title": "Invalid pagination cursor", "status": 400, "cursor": "bm90LWEtY3Vyc29y",
+      "reason": "invalid base64 payload", "detail": "Cursor could not be decoded: invalid base64 payload. Follow links.next from'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: invalid-filter
+    definition: '**Status:** `400` A filter named an unknown field, used an operator the field does not support, or carried an unparseable value.
+      **Extension members:** `field`, `op`, `value`, `supported_operators`, `supported_fields` **Example** ```json { "type": "/problems/invalid-filter",
+      "title": "Invalid filter", "status": 400, "field": "name", "op": "contains", "value": null, "supported_operators": [ "eq", "'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: invalid-sort
+    definition: '**Status:** `400` The `sort` parameter named a column that is not sortable on this endpoint. **Extension members:** `column`,
+      `supported_columns` **Example** ```json { "type": "/problems/invalid-sort", "title": "Invalid sort", "status": 400, "column": "created_at",
+      "supported_columns": [ "id", "name" ], "detail": "Sort column ''created_at'' is not sortable on this endpoint. Sortable columns: id, nam'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: invalid-include
+    definition: '**Status:** `400` The `include` parameter named a relationship that cannot be embedded on this endpoint. **Extension members:**
+      `relation`, `supported_relations` **Example** ```json { "type": "/problems/invalid-include", "title": "Invalid include", "status": 400,
+      "relation": "manufacturer", "supported_relations": [ "brand", "food_group", "nutrients", "serving_sizes", "images", "market_countries" ]'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: invalid-fields
+    definition: '**Status:** `400` A `fields[]` sparse-fieldset selection named a field that is not exposed on that resource. **Extension members:**
+      `resource`, `field`, `supported_fields` **Example** ```json { "type": "/problems/invalid-fields", "title": "Invalid sparse-fieldset selection",
+      "status": 400, "resource": "foods", "field": "colour", "supported_fields": [ "id", "name", "barcode" ], "detail": "Field ''co'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: invalid-page-size
+    definition: '**Status:** `400` The requested `page_size` is outside the accepted range for this endpoint. **Extension members:** `requested`,
+      `minimum`, `maximum` **Example** ```json { "type": "/problems/invalid-page-size", "title": "Invalid page size", "status": 400, "requested":
+      0, "minimum": 1, "maximum": 20, "detail": "page_size=0 is below the minimum of 1", "doc_url": "https://api.noms.sh/docs#tag/invalid'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: unknown-query-param
+    definition: '**Status:** `400` The request used a query parameter outside this endpoint''s accepted vocabulary. **Extension members:** `param`,
+      `supported_params`, `suggestion` **Example** ```json { "type": "/problems/unknown-query-param", "title": "Unknown query parameter", "status":
+      400, "param": "page[size]", "supported_params": [ "cursor", "page_size", "sort" ], "suggestion": "page_size", "detail": "''page[s'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: not-found
+    definition: '**Status:** `404` No resource matches the requested id. **Extension members:** `resource`, `id` **Example** ```json { "type":
+      "/problems/not-found", "title": "Not found", "status": 404, "resource": "foods", "id": "abc123def456", "detail": "Food with id ''abc123def456''
+      was not found.", "doc_url": "https://api.noms.sh/docs#tag/not-found" } ```'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: unauthorized
+    definition: '**Status:** `401` Valid authentication is missing or was rejected. **Example** ```json { "type": "/problems/unauthorized", "title":
+      "Unauthorized", "status": 401, "detail": "Valid authentication is required to access this resource.", "doc_url": "https://api.noms.sh/docs#tag/unauthorized"
+      } ```'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: maintenance
+    definition: '**Status:** `503` The API is temporarily in maintenance and is not serving this request; retry shortly. **Example** ```json {
+      "type": "/problems/maintenance", "title": "Service in maintenance", "status": 503, "detail": "The API is temporarily unavailable for maintenance;
+      please retry shortly.", "doc_url": "https://api.noms.sh/docs#tag/maintenance" } ```'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: quota-exceeded
+    definition: '**Status:** `429` Your account''s request quota is exhausted for the current window; retry once it resets. Every key on an account
+      draws on the same allowance. **Extension members:** `limit`, `window`, `retry_after` **Example** ```json { "type": "/problems/quota-exceeded",
+      "title": "Quota exceeded", "status": 429, "limit": 250, "window": "daily", "retry_after": 3600, "detail": "Request quota of 250'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: rate-limited
+    definition: '**Status:** `429` Requests arrived faster than your plan''s burst rate; slow down and retry after `Retry-After`. The burst allowance
+      is per account, so extra keys do not raise it. **Extension members:** `limit`, `window`, `retry_after` **Example** ```json { "type": "/problems/rate-limited",
+      "title": "Rate limit exceeded", "status": 429, "limit": 1, "window": "second", "retry_after": 1, "detail": "B'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: enumeration-forbidden
+    definition: '**Status:** `403` Your plan does not allow bulk listing; use a `q` search query or fetch items by id (or upgrade for full enumeration).
+      **Example** ```json { "type": "/problems/enumeration-forbidden", "title": "Bulk enumeration not available on this tier", "status": 403,
+      "detail": "This tier does not allow bulk listing. Add a `q` search query to this request, fetch a single item by id, or upgrade '
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: result-depth-exceeded
+    definition: '**Status:** `403` Your plan limits how deep a query can be paged; narrow the search or upgrade for unlimited depth. **Extension
+      members:** `cap` **Example** ```json { "type": "/problems/result-depth-exceeded", "title": "Result depth limit exceeded", "status": 403,
+      "cap": 1000, "detail": "This tier returns roughly the first 1000 results of a query. Narrow your search with `q` or filters, or upgrade'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: market-not-selected
+    definition: '**Status:** `403` Your plan serves one market and no market has been chosen yet; pick one in the dashboard or with `PUT /v1/market`
+      (or upgrade for all-markets access). A market is an account setting, so every key on the account shares it. **Example** ```json { "type":
+      "/problems/market-not-selected", "title": "No market selected for this tier", "status": 403, "detail": "This tier serves one marke'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: unknown-market
+    definition: '**Status:** `422` The market named in a market write is not one of the markets foods are available in; pick one from `available`.
+      **Extension members:** `market`, `available` **Example** ```json { "type": "/problems/unknown-market", "title": "Unknown market", "status":
+      422, "market": "ZZ", "available": [ "CL", "US" ], "detail": "No foods are available in market ''ZZ''. Choose one of the available ma'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: market-not-applicable
+    definition: '**Status:** `409` A market write was made on an account whose plan already serves all markets, so there is no single market to
+      set; narrow an individual request with the `market_countries` filter instead. **Example** ```json { "type": "/problems/market-not-applicable",
+      "title": "Market selection not applicable to this tier", "status": 409, "detail": "Your plan already serves all markets, so there '
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: market-account-required
+    definition: '**Status:** `409` A market is an account setting, and this key is not attached to an account. Mint a fresh key from your dashboard
+      and use that one. **Example** ```json { "type": "/problems/market-account-required", "title": "No account to set a market on", "status":
+      409, "detail": "A market is an account setting, and this credential has no account to set it on. Sign in to the dashboard, or use a '
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: key-revoked
+    definition: '**Status:** `409` The key you tried to rotate has already been revoked. Revocation is permanent, so create a new key from your
+      dashboard instead. **Extension members:** `id` **Example** ```json { "type": "/problems/key-revoked", "title": "API key is revoked", "status":
+      409, "id": "k3Ym0pQrStUv", "detail": "API key with id ''k3Ym0pQrStUv'' is revoked and cannot be rotated. Create a new key instead.",'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: key-limit-reached
+    definition: '**Status:** `409` Your account already holds the maximum number of live API keys; revoke one from your dashboard before creating
+      another. Extra keys never raise your quota — every key on an account shares one request allowance. **Extension members:** `limit`, `count`
+      **Example** ```json { "type": "/problems/key-limit-reached", "title": "API key limit reached", "status": 409, "limit": 5, "count": 5'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: forbidden
+    definition: '**Status:** `403` The request was rejected before it reached the API. **Example** ```json { "type": "/problems/forbidden", "title":
+      "Forbidden", "status": 403, "detail": "The request was rejected before it reached the API.", "doc_url": "https://api.noms.sh/docs#tag/forbidden"
+      } ```'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: service-unavailable
+    definition: '**Status:** `503` The service is temporarily unable to handle the request; retry shortly. **Example** ```json { "type": "/problems/service-unavailable",
+      "title": "Service unavailable", "status": 503, "detail": "The service is briefly unavailable; retry shortly.", "doc_url": "https://api.noms.sh/docs#tag/service-unavailable"
+      } ```'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: search-timeout
+    definition: '**Status:** `504` The search outran its time budget and was abandoned; narrow the query and retry. **Extension members:** `timeout_ms`
+      **Example** ```json { "type": "/problems/search-timeout", "title": "Search timed out", "status": 504, "timeout_ms": 800, "detail": "The
+      search exceeded its 800ms time limit and was abandoned. Narrow the query \u2014 a more specific `q`, or additional filters \u2014'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: search-unavailable
+    definition: '**Status:** `503` The search service is temporarily unavailable; requests without `q` or a nutrient sort are unaffected. **Example**
+      ```json { "type": "/problems/search-unavailable", "title": "Search unavailable", "status": 503, "detail": "The search service is temporarily
+      unavailable, so this request could not be answered. Retry shortly. Requests that do not use `q` or a nutrient sort are unaffec'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: api-version-removed
+    definition: '**Status:** `410` The requested API URL version has been removed; migrate to the current version. **Extension members:** `migration_guide`
+      **Example** ```json { "type": "/problems/api-version-removed", "title": "API version removed", "status": 410, "migration_guide": "https://noms.sh/docs/api/v0-to-v1",
+      "detail": "API version v0 was removed on 2026-01-01. Migrate to v1.", "doc_url": "https://api.n'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: validation-error
+    definition: '**Status:** `422` The request failed schema validation; `errors` lists each offending location. **Extension members:** `errors`
+      **Example** ```json { "type": "/problems/validation-error", "title": "Request validation error", "status": 422, "errors": [ { "type": "int_parsing",
+      "loc": [ "query", "page_size" ], "msg": "Input should be a valid integer" } ], "detail": "Request validation failed.", "doc'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: internal-server-error
+    definition: '**Status:** `500` An unexpected server error occurred. **Example** ```json { "type": "/problems/internal-server-error", "title":
+      "Internal server error", "status": 500, "detail": "An unexpected error occurred while processing the request.", "doc_url": "https://api.noms.sh/docs#tag/internal-server-error"
+      } ```'
+    tags:
+    - Resource Group
+    source: openapi/noms-openapi.json
+  - term: BrandDetailSchema
+    definition: A brand item response. Identical to the list brand resource plus the optional `canonical_id`, which is present only when the requested
+      brand id was retired by a merge and forwarded to a surviving brand. Update any stored reference to the id it carries.
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/BrandDetailSchema
+  - term: BrandSchema
+    definition: 'A food brand: a stable short-id and the brand name.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/BrandSchema
+  - term: FoodDetailSchema
+    definition: A food **with its includable relations**. The flat food resource is always present; each relation below appears in the ``data``
+      object only when the client requests it via ``include=`` (e.g. ``?include=brand,nutrients``), so every relation is optional and absent by
+      default. The keys present are exactly those the client selected via ``include=`` / ``fields[...]``.
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/FoodDetailSchema
+  - term: FoodGroupSchema
+    definition: A canonical food group — a stable code plus a curated display name.
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/FoodGroupSchema
+  - term: FoodImageSchema
+    definition: 'One image for a food. Images arrive in display order, so the array index conveys sequence. ``type`` categorizes the image so
+      a consumer can separate believed-real food photos from generic representations: ``photo`` is a photo believed to show the actual food; ``icon``
+      is a generic stand-in (a source icon, or the food''s food-group icon, appended as a fallback only when the food has no real images o'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/FoodImageSchema
+  - term: FoodMarketCountrySchema
+    definition: One country a food is sold in, as an ISO 3166-1 alpha-2 code.
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/FoodMarketCountrySchema
+  - term: FoodNutrientSchema
+    definition: One nutrient measurement attached to a food, shaped ``{id, name, value, unit}``. ``id`` is the nutrient's own code (e.g. ``PROTEIN``)
+      and ``name`` its display name, making the embedded object symmetric with the standalone ``/v1/nutrients`` resource and the ``brand`` / ``food_group``
+      embeds; ``value`` is the measurement specific to this food, expressed **per 100** of the food's ``basis_unit`` (dire
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/FoodNutrientSchema
+  - term: FoodServingSizeSchema
+    definition: One serving definition, shaped ``{unit, descriptor, quantity, grams, milliliters, is_default}``. ``quantity`` is the count of
+      ``unit``s in one serving (e.g. ``1`` cup, ``30`` g); ``grams`` and ``milliliters`` are that serving's absolute size in each dimension. Multiply
+      a nutrient's per-100 ``value`` by ``serving[food.basis_unit] / 100`` to get its amount in this serving — the field the food's ``ba
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/FoodServingSizeSchema
+  - term: Item[BrandDetailSchema]
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/Item_BrandDetailSchema_
+  - term: Item[FoodDetailSchema]
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/Item_FoodDetailSchema_
+  - term: Item[FoodGroupSchema]
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/Item_FoodGroupSchema_
+  - term: Item[NutrientSchema]
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/Item_NutrientSchema_
+  - term: MarketChoice
+    definition: The market to scope the account to — one of `GET /v1/market`'s `available`.
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/MarketChoice
+  - term: MarketData
+    definition: The account's market selection and the markets it may choose from.
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/MarketData
+  - term: MarketResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/MarketResponse
+  - term: NutrientSchema
+    definition: A canonical nutrient in the catalog, with its measurement unit and optional position in the nutrient hierarchy.
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/NutrientSchema
+  - term: PageLinks
+    definition: 'Object declared by the contract with fields: self, next.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/PageLinks
+  - term: PageMeta
+    definition: 'Object declared by the contract with fields: has_more, page_size.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/PageMeta
+  - term: Page[BrandDetailSchema]
+    definition: 'Object declared by the contract with fields: data, links, meta.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/Page_BrandDetailSchema_
+  - term: Page[FoodDetailSchema]
+    definition: 'Object declared by the contract with fields: data, links, meta.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/Page_FoodDetailSchema_
+  - term: Page[FoodGroupSchema]
+    definition: 'Object declared by the contract with fields: data, links, meta.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/Page_FoodGroupSchema_
+  - term: Page[NutrientSchema]
+    definition: 'Object declared by the contract with fields: data, links, meta.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/Page_NutrientSchema_
+  - term: QuotaWindow
+    definition: The window over which the **account's** request quota is measured. ``daily`` is a rolling 24-hour window. ``monthly`` is the account's
+      billing period, starting from its renewal date.
+    tags:
+    - Enumeration
+    source: openapi/noms-openapi.json#/components/schemas/QuotaWindow
+  - term: Tier
+    definition: The API access tier assigned to this **account**. One of ``taster`` (free), ``sous_chef`` (paid), or ``head_chef`` (paid).
+    tags:
+    - Enumeration
+    source: openapi/noms-openapi.json#/components/schemas/Tier
+  - term: UsageData
+    definition: The calling **account's** usage against its quota for the current window.
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/UsageData
+  - term: UsageResponse
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/UsageResponse
+  - term: Problem
+    definition: An **RFC 9457** problem document, served as `application/problem+json`. `type` is a stable, never-renamed URI you can branch on;
+      the other core members are for humans. Individual problems add **extension members** on top of these — `retry_after` on a `429`, `supported_columns`
+      on an invalid sort, `errors` on a validation failure. They are documented on the problem itself, under Problems, and a cli
+    tags:
+    - Object
+    source: openapi/noms-openapi.json#/components/schemas/Problem

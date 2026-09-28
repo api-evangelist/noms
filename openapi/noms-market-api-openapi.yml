@@ -1,0 +1,311 @@
+openapi: 3.2.0
+info:
+  title: Noms Market API
+  summary: 'A REST API for nutritional data: foods, brands, nutrients and food groups.'
+  description: '**Noms** is a REST API for nutritional data: **foods**, **brands**, **nutrients**
+
+    and **food groups**.'
+  contact:
+    name: Noms
+    url: https://noms.sh/
+    email: support@noms.sh
+  license:
+    name: Proprietary — © Noms, all rights reserved
+  version: v1
+  x-logo:
+    url: /wordmark.svg
+    backgroundColor: '#ffffff'
+    altText: Noms
+    href: https://noms.sh
+servers:
+- url: https://api.noms.sh
+  description: Production
+tags:
+- name: Market
+  description: Read and set your account's market. Free-tier accounts serve one chosen market, shared by every key they own; set it before querying foods (paid plans serve all markets).
+  x-displayName: Market
+paths:
+  /v1/market:
+    get:
+      tags:
+      - Market
+      summary: Get your market selection
+      description: 'Return the account''s chosen market and the markets it may choose from.
+
+
+        `chosen` is `null` until a single-market account sets one, and always `null` on
+
+        a tier that serves all markets — that case carries a `note` explaining how to
+
+        narrow a request instead. `available` lists every market foods exist in.
+
+        Reading this never consumes quota.'
+      operationId: marketGetMarket
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketResponse'
+        '401':
+          description: Authentication is missing or invalid.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              example:
+                type: /problems/unauthorized
+                title: Unauthorized
+                status: 401
+                detail: Valid authentication is required to access this resource.
+                doc_url: https://api.noms.sh/docs#tag/unauthorized
+        '503':
+          description: The service is temporarily unable to handle the request; retry shortly.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              example:
+                type: /problems/service-unavailable
+                title: Service unavailable
+                status: 503
+                detail: The service is briefly unavailable; retry shortly.
+                doc_url: https://api.noms.sh/docs#tag/service-unavailable
+      security:
+      - ApiKey: []
+    put:
+      tags:
+      - Market
+      summary: Set your market selection
+      description: 'Set (or change) the account''s market, then return the new selection.
+
+
+        The change applies to **every API key this account owns**. The server that handles
+
+        the write serves the new market straight away; others may serve the previous
+
+        selection for up to a minute, so a request made right after the change can still
+
+        reflect the old one. It settles on its own within that minute — wait it out rather
+
+        than retrying in a loop. Only single-market plans may set a
+
+        market; a plan that already serves all markets gets a 409. The chosen market must
+
+        be one a food is actually available in, else a 422.'
+      operationId: marketSetMarket
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketChoice'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketResponse'
+        '401':
+          description: Authentication is missing or invalid.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              example:
+                type: /problems/unauthorized
+                title: Unauthorized
+                status: 401
+                detail: Valid authentication is required to access this resource.
+                doc_url: https://api.noms.sh/docs#tag/unauthorized
+        '422':
+          description: 'The request was well-formed but could not be processed: a parameter failed validation, or a value is not one this resource accepts.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              example:
+                type: /problems/unknown-market
+                title: Unknown market
+                status: 422
+                market: ZZ
+                available:
+                - CL
+                - US
+                detail: No foods are available in market 'ZZ'. Choose one of the available markets (see `available`, or GET /v1/market).
+                doc_url: https://api.noms.sh/docs#tag/unknown-market
+        '409':
+          description: The request conflicts with the current state of the resource.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              examples:
+                Market selection not applicable to this tier:
+                  value:
+                    type: /problems/market-not-applicable
+                    title: Market selection not applicable to this tier
+                    status: 409
+                    detail: Your plan already serves all markets, so there is no single market to set. Narrow an individual request with the `market_countries` filter instead.
+                    doc_url: https://api.noms.sh/docs#tag/market-not-applicable
+                No account to set a market on:
+                  value:
+                    type: /problems/market-account-required
+                    title: No account to set a market on
+                    status: 409
+                    detail: A market is an account setting, and this credential has no account to set it on. Sign in to the dashboard, or use a key that belongs to a registered account.
+                    doc_url: https://api.noms.sh/docs#tag/market-account-required
+        '503':
+          description: The service is temporarily unable to handle the request; retry shortly.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+              example:
+                type: /problems/service-unavailable
+                title: Service unavailable
+                status: 503
+                detail: The service is briefly unavailable; retry shortly.
+                doc_url: https://api.noms.sh/docs#tag/service-unavailable
+      security:
+      - ApiKey: []
+components:
+  schemas:
+    Problem:
+      properties:
+        title:
+          type: string
+          title: Problem title
+          description: Short, human-readable summary of the problem type.
+        type:
+          type: string
+          title: Problem type
+          description: Stable problem-type URI under `/problems/<slug>`. Relative, so it resolves against the host that served the response. The slug is never renamed — branch on this, not on `title` or `detail`.
+        status:
+          type: integer
+          title: Status code
+          description: The HTTP status code, repeated in the body.
+        detail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Problem detail
+          description: 'Human-readable explanation of *this* occurrence. Free text: it may name concrete values and may change without notice.'
+        doc_url:
+          type: string
+          title: Documentation URL
+          description: Deep link to this problem's entry in these docs, stamped per request against the host that served it. Present on every problem body.
+      type: object
+      required:
+      - type
+      - title
+      - status
+      title: Problem
+      description: 'An **RFC 9457** problem document, served as `application/problem+json`. `type` is a stable, never-renamed URI you can branch on; the other core members are for humans.
+
+
+        Individual problems add **extension members** on top of these — `retry_after` on a `429`, `supported_columns` on an invalid sort, `errors` on a validation failure. They are documented on the problem itself, under Problems, and a client should ignore any member it does not recognise rather than reject the body.'
+    MarketChoice:
+      properties:
+        market:
+          type: string
+          minLength: 1
+          title: Market
+          description: The market (country code) to scope this account to.
+          examples:
+          - CL
+      type: object
+      required:
+      - market
+      title: MarketChoice
+      description: The market to scope the account to — one of `GET /v1/market`'s `available`.
+    MarketData:
+      properties:
+        chosen:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Chosen
+          description: The market this account is scoped to (a country code), or `null` — either because a single-market tier has not chosen yet, or because the tier serves all markets (see `note`). Every API key the account owns reads the same value.
+        available:
+          items:
+            type: string
+          type: array
+          title: Available
+          description: Every market foods are available in — the valid choices for `PUT`.
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+          description: Why `chosen` is `null` when it can never be set — present only on a tier that already serves every market. `null` on a single-market tier.
+      type: object
+      required:
+      - chosen
+      - available
+      title: MarketData
+      description: The account's market selection and the markets it may choose from.
+    MarketResponse:
+      properties:
+        data:
+          $ref: '#/components/schemas/MarketData'
+      type: object
+      required:
+      - data
+      title: MarketResponse
+      examples:
+      - data:
+          available:
+          - AR
+          - CL
+          - MX
+          - US
+          chosen: CL
+  securitySchemes:
+    ApiKey:
+      type: apiKey
+      description: Programmatic access key for the `/v1` resource endpoints. Send it as the `X-API-Key` header (`noms_sk_<env>_...`). Create one in your dashboard under **API Keys → Create key**; the raw key is shown once and never stored. Your account's tier governs which data you can read, and every key you own draws on the same request allowance.
+      in: header
+      name: X-API-Key
+x-tagGroups:
+- name: Resources
+  tags:
+  - foods
+  - brands
+  - nutrients
+  - foodGroups
+- name: Usage
+  tags:
+  - usage
+  - market
+- name: Problems
+  tags:
+  - invalid-cursor
+  - invalid-filter
+  - invalid-sort
+  - invalid-include
+  - invalid-fields
+  - invalid-page-size
+  - unknown-query-param
+  - not-found
+  - unauthorized
+  - maintenance
+  - quota-exceeded
+  - rate-limited
+  - enumeration-forbidden
+  - result-depth-exceeded
+  - market-not-selected
+  - unknown-market
+  - market-not-applicable
+  - market-account-required
+  - key-revoked
+  - key-limit-reached
+  - forbidden
+  - service-unavailable
+  - search-timeout
+  - search-unavailable
+  - api-version-removed
+  - validation-error
+  - internal-server-error
