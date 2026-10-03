@@ -683,14 +683,25 @@ paths:
               description: 'A strong entity-tag for this exact response. Send it back as `If-None-Match` on your next request for the same URL: if nothing has changed you get a `304 Not Modified` with no body instead of the full page. The tag covers everything the response depends on — your tier and market, `include`, `fields`, `sort`, and the page cursor — so it is only ever valid for the request that produced it.'
 components:
   schemas:
-    Item_BrandDetailSchema_:
+    PageMeta:
       properties:
-        data:
-          $ref: '#/components/schemas/BrandDetailSchema'
+        has_more:
+          type: boolean
+          title: Has More
+          description: Whether more pages follow this one (equivalently, whether ``links.next`` is non-null).
+        page_size:
+          type: integer
+          minimum: 1.0
+          title: Page Size
+          description: 'Number of items requested per page: the effective ``page_size`` (the requested value, or the default when ``page_size`` is omitted).'
       type: object
       required:
-      - data
-      title: Item[BrandDetailSchema]
+      - has_more
+      - page_size
+      title: PageMeta
+      examples:
+      - has_more: true
+        page_size: 10
     BrandDetailSchema:
       properties:
         id:
@@ -727,6 +738,23 @@ components:
       examples:
       - id: XoluRyOx9o3C
         name: Blue Diamond
+    Page_BrandDetailSchema_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/BrandDetailSchema'
+          type: array
+          title: Data
+        links:
+          $ref: '#/components/schemas/PageLinks'
+        meta:
+          $ref: '#/components/schemas/PageMeta'
+      type: object
+      required:
+      - data
+      - links
+      - meta
+      title: Page[BrandDetailSchema]
     PageLinks:
       properties:
         self:
@@ -752,25 +780,6 @@ components:
       examples:
       - next: https://api.noms.sh/v1/foods?page_size=2&cursor=eyJ2IjpbeyJ0IjoicmF3IiwidiI6Ik1pbGsifV0sInMiOiIrbmFtZSJ9
         self: https://api.noms.sh/v1/foods?page_size=2
-    PageMeta:
-      properties:
-        has_more:
-          type: boolean
-          title: Has More
-          description: Whether more pages follow this one (equivalently, whether ``links.next`` is non-null).
-        page_size:
-          type: integer
-          minimum: 1.0
-          title: Page Size
-          description: 'Number of items requested per page: the effective ``page_size`` (the requested value, or the default when ``page_size`` is omitted).'
-      type: object
-      required:
-      - has_more
-      - page_size
-      title: PageMeta
-      examples:
-      - has_more: true
-        page_size: 10
     Problem:
       properties:
         title:
@@ -805,23 +814,14 @@ components:
 
 
         Individual problems add **extension members** on top of these — `retry_after` on a `429`, `supported_columns` on an invalid sort, `errors` on a validation failure. They are documented on the problem itself, under Problems, and a client should ignore any member it does not recognise rather than reject the body.'
-    Page_BrandDetailSchema_:
+    Item_BrandDetailSchema_:
       properties:
         data:
-          items:
-            $ref: '#/components/schemas/BrandDetailSchema'
-          type: array
-          title: Data
-        links:
-          $ref: '#/components/schemas/PageLinks'
-        meta:
-          $ref: '#/components/schemas/PageMeta'
+          $ref: '#/components/schemas/BrandDetailSchema'
       type: object
       required:
       - data
-      - links
-      - meta
-      title: Page[BrandDetailSchema]
+      title: Item[BrandDetailSchema]
   securitySchemes:
     ApiKey:
       type: apiKey

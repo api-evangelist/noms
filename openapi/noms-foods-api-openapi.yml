@@ -897,68 +897,90 @@ paths:
               description: 'A strong entity-tag for this exact response. Send it back as `If-None-Match` on your next request for the same URL: if nothing has changed you get a `304 Not Modified` with no body instead of the full page. The tag covers everything the response depends on — your tier and market, `include`, `fields`, `sort`, and the page cursor — so it is only ever valid for the request that produced it.'
 components:
   schemas:
-    FoodImageSchema:
-      properties:
-        url:
-          type: string
-          title: Url
-          description: Public image URL (served from the Noms image CDN). Array order conveys display sequence.
-        type:
-          type: string
-          enum:
-          - photo
-          - icon
-          title: Type
-          description: 'Image category: `photo` (believed to be an actual photo of the food) or `icon` (a generic representation — a source icon or the food''s food-group icon). Lets a consumer separate real photos from generic fallbacks.'
-      type: object
-      required:
-      - url
-      - type
-      title: FoodImageSchema
-      description: 'One image for a food. Images arrive in display order, so the array
-
-        index conveys sequence.
-
-
-        ``type`` categorizes the image so a consumer can separate believed-real food
-
-        photos from generic representations: ``photo`` is a photo believed to show the
-
-        actual food; ``icon`` is a generic stand-in (a source icon, or the food''s
-
-        food-group icon, appended as a fallback only when the food has no real images
-
-        of its own).'
-      examples:
-      - type: photo
-        url: https://images.noms.sh/60f440137489aed9240588a68ffebf455102b257021bfa1cde4d6f6b0b28ac6e
-    FoodGroupSchema:
+    FoodNutrientSchema:
       properties:
         id:
           type: string
           title: Id
-          description: Stable canonical UPPER_SNAKE code and the `/v1/food-groups/{id}` handle (e.g. `DAIRY`).
+          description: Nutrient code (e.g. `PROTEIN`); matches the standalone `/v1/nutrients` id.
         name:
           type: string
           title: Name
-          description: Human-readable display label (e.g. `Dairy`). Searchable, sortable, and filterable.
-        icon_url:
+          description: Nutrient display name; trimmable via `fields[nutrients]`.
+        value:
+          type: string
+          format: decimal
+          title: Value
+          description: Amount of this nutrient per **100** of the food's `basis_unit` (`grams` or `milliliters`). Multiply by `serving[basis_unit] / 100` to get the amount in that serving. Serialized as a string to preserve decimal precision.
+        unit:
           anyOf:
           - type: string
+            enum:
+            - g
+            - mg
+            - mcg
+            - kcal
           - type: 'null'
-          title: Icon Url
-          description: 'Public URL of the group''s icon (served from the Noms image CDN); `null` when the group has no icon available. A food in this group gets this icon appended as a fallback image (with `type: icon`) only when it has no real images of its own.'
+          title: Unit
+          description: Measurement unit `{g, mg, mcg, kcal}`, or `null` for a dimensionless nutrient.
       type: object
       required:
       - id
       - name
-      - icon_url
-      title: FoodGroupSchema
-      description: A canonical food group — a stable code plus a curated display name.
+      - value
+      - unit
+      title: FoodNutrientSchema
+      description: 'One nutrient measurement attached to a food, shaped ``{id, name,
+
+        value, unit}``. ``id`` is the nutrient''s own code (e.g. ``PROTEIN``) and
+
+        ``name`` its display name, making the embedded object symmetric with the
+
+        standalone ``/v1/nutrients`` resource and the ``brand`` / ``food_group``
+
+        embeds; ``value`` is the measurement specific to this food, expressed
+
+        **per 100** of the food''s ``basis_unit`` (directly comparable across foods;
+
+        multiply by ``serving[basis_unit] / 100`` to get the amount in that
+
+        serving). ``unit`` is one of the closed set ``{g, mg, mcg, kcal}``, or
+
+        ``null`` for a dimensionless nutrient. ``name`` is trimmable via
+
+        ``fields[nutrients]``.'
       examples:
-      - icon_url: https://images.noms.sh/dairy-icon-hash
-        id: DAIRY
-        name: Dairy
+      - id: PROTEIN
+        name: Protein
+        unit: g
+        value: '3.2000'
+    Item_FoodDetailSchema_:
+      properties:
+        data:
+          $ref: '#/components/schemas/FoodDetailSchema'
+      type: object
+      required:
+      - data
+      title: Item[FoodDetailSchema]
+    PageMeta:
+      properties:
+        has_more:
+          type: boolean
+          title: Has More
+          description: Whether more pages follow this one (equivalently, whether ``links.next`` is non-null).
+        page_size:
+          type: integer
+          minimum: 1.0
+          title: Page Size
+          description: 'Number of items requested per page: the effective ``page_size`` (the requested value, or the default when ``page_size`` is omitted).'
+      type: object
+      required:
+      - has_more
+      - page_size
+      title: PageMeta
+      examples:
+      - has_more: true
+        page_size: 10
     FoodDetailSchema:
       properties:
         id:
@@ -1129,6 +1151,98 @@ components:
           is_default: true
           quantity: '28.0'
           unit: g
+    FoodMarketCountrySchema:
+      properties:
+        country_code:
+          type: string
+          title: Country Code
+          description: ISO 3166-1 alpha-2 country code, uppercase (e.g. `CL`).
+      type: object
+      required:
+      - country_code
+      title: FoodMarketCountrySchema
+      description: One country a food is sold in, as an ISO 3166-1 alpha-2 code.
+      examples:
+      - country_code: CL
+    FoodGroupSchema:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Stable canonical UPPER_SNAKE code and the `/v1/food-groups/{id}` handle (e.g. `DAIRY`).
+        name:
+          type: string
+          title: Name
+          description: Human-readable display label (e.g. `Dairy`). Searchable, sortable, and filterable.
+        icon_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon Url
+          description: 'Public URL of the group''s icon (served from the Noms image CDN); `null` when the group has no icon available. A food in this group gets this icon appended as a fallback image (with `type: icon`) only when it has no real images of its own.'
+      type: object
+      required:
+      - id
+      - name
+      - icon_url
+      title: FoodGroupSchema
+      description: A canonical food group — a stable code plus a curated display name.
+      examples:
+      - icon_url: https://images.noms.sh/dairy-icon-hash
+        id: DAIRY
+        name: Dairy
+    FoodImageSchema:
+      properties:
+        url:
+          type: string
+          title: Url
+          description: Public image URL (served from the Noms image CDN). Array order conveys display sequence.
+        type:
+          type: string
+          enum:
+          - photo
+          - icon
+          title: Type
+          description: 'Image category: `photo` (believed to be an actual photo of the food) or `icon` (a generic representation — a source icon or the food''s food-group icon). Lets a consumer separate real photos from generic fallbacks.'
+      type: object
+      required:
+      - url
+      - type
+      title: FoodImageSchema
+      description: 'One image for a food. Images arrive in display order, so the array
+
+        index conveys sequence.
+
+
+        ``type`` categorizes the image so a consumer can separate believed-real food
+
+        photos from generic representations: ``photo`` is a photo believed to show the
+
+        actual food; ``icon`` is a generic stand-in (a source icon, or the food''s
+
+        food-group icon, appended as a fallback only when the food has no real images
+
+        of its own).'
+      examples:
+      - type: photo
+        url: https://images.noms.sh/60f440137489aed9240588a68ffebf455102b257021bfa1cde4d6f6b0b28ac6e
+    Page_FoodDetailSchema_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/FoodDetailSchema'
+          type: array
+          title: Data
+        links:
+          $ref: '#/components/schemas/PageLinks'
+        meta:
+          $ref: '#/components/schemas/PageMeta'
+      type: object
+      required:
+      - data
+      - links
+      - meta
+      title: Page[FoodDetailSchema]
     PageLinks:
       properties:
         self:
@@ -1154,59 +1268,6 @@ components:
       examples:
       - next: https://api.noms.sh/v1/foods?page_size=2&cursor=eyJ2IjpbeyJ0IjoicmF3IiwidiI6Ik1pbGsifV0sInMiOiIrbmFtZSJ9
         self: https://api.noms.sh/v1/foods?page_size=2
-    FoodMarketCountrySchema:
-      properties:
-        country_code:
-          type: string
-          title: Country Code
-          description: ISO 3166-1 alpha-2 country code, uppercase (e.g. `CL`).
-      type: object
-      required:
-      - country_code
-      title: FoodMarketCountrySchema
-      description: One country a food is sold in, as an ISO 3166-1 alpha-2 code.
-      examples:
-      - country_code: CL
-    BrandSchema:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Stable 12-char base62 short-id for the brand name; the `/v1/brands/{id}` handle.
-        name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Name
-          description: Brand name as it appears on packaging (e.g. `Blue Diamond`); `null` when unknown.
-      type: object
-      required:
-      - id
-      - name
-      title: BrandSchema
-      description: 'A food brand: a stable short-id and the brand name.'
-      examples:
-      - id: XoluRyOx9o3C
-        name: Blue Diamond
-    PageMeta:
-      properties:
-        has_more:
-          type: boolean
-          title: Has More
-          description: Whether more pages follow this one (equivalently, whether ``links.next`` is non-null).
-        page_size:
-          type: integer
-          minimum: 1.0
-          title: Page Size
-          description: 'Number of items requested per page: the effective ``page_size`` (the requested value, or the default when ``page_size`` is omitted).'
-      type: object
-      required:
-      - has_more
-      - page_size
-      title: PageMeta
-      examples:
-      - has_more: true
-        page_size: 10
     FoodServingSizeSchema:
       properties:
         unit:
@@ -1301,14 +1362,27 @@ components:
         milliliters: '250'
         quantity: '250'
         unit: ml
-    Item_FoodDetailSchema_:
+    BrandSchema:
       properties:
-        data:
-          $ref: '#/components/schemas/FoodDetailSchema'
+        id:
+          type: string
+          title: Id
+          description: Stable 12-char base62 short-id for the brand name; the `/v1/brands/{id}` handle.
+        name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Name
+          description: Brand name as it appears on packaging (e.g. `Blue Diamond`); `null` when unknown.
       type: object
       required:
-      - data
-      title: Item[FoodDetailSchema]
+      - id
+      - name
+      title: BrandSchema
+      description: 'A food brand: a stable short-id and the brand name.'
+      examples:
+      - id: XoluRyOx9o3C
+        name: Blue Diamond
     Problem:
       properties:
         title:
@@ -1343,80 +1417,6 @@ components:
 
 
         Individual problems add **extension members** on top of these — `retry_after` on a `429`, `supported_columns` on an invalid sort, `errors` on a validation failure. They are documented on the problem itself, under Problems, and a client should ignore any member it does not recognise rather than reject the body.'
-    Page_FoodDetailSchema_:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/FoodDetailSchema'
-          type: array
-          title: Data
-        links:
-          $ref: '#/components/schemas/PageLinks'
-        meta:
-          $ref: '#/components/schemas/PageMeta'
-      type: object
-      required:
-      - data
-      - links
-      - meta
-      title: Page[FoodDetailSchema]
-    FoodNutrientSchema:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Nutrient code (e.g. `PROTEIN`); matches the standalone `/v1/nutrients` id.
-        name:
-          type: string
-          title: Name
-          description: Nutrient display name; trimmable via `fields[nutrients]`.
-        value:
-          type: string
-          format: decimal
-          title: Value
-          description: Amount of this nutrient per **100** of the food's `basis_unit` (`grams` or `milliliters`). Multiply by `serving[basis_unit] / 100` to get the amount in that serving. Serialized as a string to preserve decimal precision.
-        unit:
-          anyOf:
-          - type: string
-            enum:
-            - g
-            - mg
-            - mcg
-            - kcal
-          - type: 'null'
-          title: Unit
-          description: Measurement unit `{g, mg, mcg, kcal}`, or `null` for a dimensionless nutrient.
-      type: object
-      required:
-      - id
-      - name
-      - value
-      - unit
-      title: FoodNutrientSchema
-      description: 'One nutrient measurement attached to a food, shaped ``{id, name,
-
-        value, unit}``. ``id`` is the nutrient''s own code (e.g. ``PROTEIN``) and
-
-        ``name`` its display name, making the embedded object symmetric with the
-
-        standalone ``/v1/nutrients`` resource and the ``brand`` / ``food_group``
-
-        embeds; ``value`` is the measurement specific to this food, expressed
-
-        **per 100** of the food''s ``basis_unit`` (directly comparable across foods;
-
-        multiply by ``serving[basis_unit] / 100`` to get the amount in that
-
-        serving). ``unit`` is one of the closed set ``{g, mg, mcg, kcal}``, or
-
-        ``null`` for a dimensionless nutrient. ``name`` is trimmable via
-
-        ``fields[nutrients]``.'
-      examples:
-      - id: PROTEIN
-        name: Protein
-        unit: g
-        value: '3.2000'
   securitySchemes:
     ApiKey:
       type: apiKey

@@ -698,6 +698,25 @@ components:
       - links
       - meta
       title: Page[FoodGroupSchema]
+    PageMeta:
+      properties:
+        has_more:
+          type: boolean
+          title: Has More
+          description: Whether more pages follow this one (equivalently, whether ``links.next`` is non-null).
+        page_size:
+          type: integer
+          minimum: 1.0
+          title: Page Size
+          description: 'Number of items requested per page: the effective ``page_size`` (the requested value, or the default when ``page_size`` is omitted).'
+      type: object
+      required:
+      - has_more
+      - page_size
+      title: PageMeta
+      examples:
+      - has_more: true
+        page_size: 10
     FoodGroupSchema:
       properties:
         id:
@@ -758,25 +777,6 @@ components:
       required:
       - data
       title: Item[FoodGroupSchema]
-    PageMeta:
-      properties:
-        has_more:
-          type: boolean
-          title: Has More
-          description: Whether more pages follow this one (equivalently, whether ``links.next`` is non-null).
-        page_size:
-          type: integer
-          minimum: 1.0
-          title: Page Size
-          description: 'Number of items requested per page: the effective ``page_size`` (the requested value, or the default when ``page_size`` is omitted).'
-      type: object
-      required:
-      - has_more
-      - page_size
-      title: PageMeta
-      examples:
-      - has_more: true
-        page_size: 10
     Problem:
       properties:
         title:

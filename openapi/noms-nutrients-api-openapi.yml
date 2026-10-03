@@ -687,31 +687,6 @@ paths:
               description: 'A strong entity-tag for this exact response. Send it back as `If-None-Match` on your next request for the same URL: if nothing has changed you get a `304 Not Modified` with no body instead of the full page. The tag covers everything the response depends on — your tier and market, `include`, `fields`, `sort`, and the page cursor — so it is only ever valid for the request that produced it.'
 components:
   schemas:
-    PageLinks:
-      properties:
-        self:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Self
-          description: Canonical URL of the current page, echoing the request's query parameters.
-        next:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: Next
-          description: URL of the next page, or ``null`` when this is the last page. The ``cursor`` query parameter is advanced to the next keyset position; all other query parameters are preserved verbatim.
-      type: object
-      required:
-      - self
-      title: PageLinks
-      examples:
-      - next: https://api.noms.sh/v1/foods?page_size=2&cursor=eyJ2IjpbeyJ0IjoicmF3IiwidiI6Ik1pbGsifV0sInMiOiIrbmFtZSJ9
-        self: https://api.noms.sh/v1/foods?page_size=2
     PageMeta:
       properties:
         has_more:
@@ -731,40 +706,6 @@ components:
       examples:
       - has_more: true
         page_size: 10
-    Problem:
-      properties:
-        title:
-          type: string
-          title: Problem title
-          description: Short, human-readable summary of the problem type.
-        type:
-          type: string
-          title: Problem type
-          description: Stable problem-type URI under `/problems/<slug>`. Relative, so it resolves against the host that served the response. The slug is never renamed — branch on this, not on `title` or `detail`.
-        status:
-          type: integer
-          title: Status code
-          description: The HTTP status code, repeated in the body.
-        detail:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Problem detail
-          description: 'Human-readable explanation of *this* occurrence. Free text: it may name concrete values and may change without notice.'
-        doc_url:
-          type: string
-          title: Documentation URL
-          description: Deep link to this problem's entry in these docs, stamped per request against the host that served it. Present on every problem body.
-      type: object
-      required:
-      - type
-      - title
-      - status
-      title: Problem
-      description: 'An **RFC 9457** problem document, served as `application/problem+json`. `type` is a stable, never-renamed URI you can branch on; the other core members are for humans.
-
-
-        Individual problems add **extension members** on top of these — `retry_after` on a `429`, `supported_columns` on an invalid sort, `errors` on a validation failure. They are documented on the problem itself, under Problems, and a client should ignore any member it does not recognise rather than reject the body.'
     NutrientSchema:
       properties:
         id:
@@ -834,6 +775,65 @@ components:
       - links
       - meta
       title: Page[NutrientSchema]
+    Problem:
+      properties:
+        title:
+          type: string
+          title: Problem title
+          description: Short, human-readable summary of the problem type.
+        type:
+          type: string
+          title: Problem type
+          description: Stable problem-type URI under `/problems/<slug>`. Relative, so it resolves against the host that served the response. The slug is never renamed — branch on this, not on `title` or `detail`.
+        status:
+          type: integer
+          title: Status code
+          description: The HTTP status code, repeated in the body.
+        detail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Problem detail
+          description: 'Human-readable explanation of *this* occurrence. Free text: it may name concrete values and may change without notice.'
+        doc_url:
+          type: string
+          title: Documentation URL
+          description: Deep link to this problem's entry in these docs, stamped per request against the host that served it. Present on every problem body.
+      type: object
+      required:
+      - type
+      - title
+      - status
+      title: Problem
+      description: 'An **RFC 9457** problem document, served as `application/problem+json`. `type` is a stable, never-renamed URI you can branch on; the other core members are for humans.
+
+
+        Individual problems add **extension members** on top of these — `retry_after` on a `429`, `supported_columns` on an invalid sort, `errors` on a validation failure. They are documented on the problem itself, under Problems, and a client should ignore any member it does not recognise rather than reject the body.'
+    PageLinks:
+      properties:
+        self:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Self
+          description: Canonical URL of the current page, echoing the request's query parameters.
+        next:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Next
+          description: URL of the next page, or ``null`` when this is the last page. The ``cursor`` query parameter is advanced to the next keyset position; all other query parameters are preserved verbatim.
+      type: object
+      required:
+      - self
+      title: PageLinks
+      examples:
+      - next: https://api.noms.sh/v1/foods?page_size=2&cursor=eyJ2IjpbeyJ0IjoicmF3IiwidiI6Ik1pbGsifV0sInMiOiIrbmFtZSJ9
+        self: https://api.noms.sh/v1/foods?page_size=2
   securitySchemes:
     ApiKey:
       type: apiKey

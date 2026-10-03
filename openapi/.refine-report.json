@@ -1,7 +1,7 @@
 {
   "provider": "noms",
   "sources": [
-    "noms-openapi.json"
+    "_original/noms-openapi.json"
   ],
   "outputs": [
     "noms-brands-api-openapi.yml",
@@ -11,14 +11,20 @@
     "noms-nutrients-api-openapi.yml",
     "noms-usage-api-openapi.yml"
   ],
-  "archived": [
-    "archived openapi/noms-openapi.json"
-  ],
+  "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "noms-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "apis.yml register: written (+6 apis, 7 total)"
+    "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "noms-brands-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "noms-foodgroups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "noms-foods-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "noms-market-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "noms-nutrients-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "noms-usage-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }
