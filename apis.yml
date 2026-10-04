@@ -25,6 +25,12 @@ modified: '2026-09-28'
 
 tags:
 - Company
+- Nutrition
+- Food
+- Data
+- Health
+tags_raw:
+- Company
 - nutrition
 - food
 - API
@@ -118,6 +124,8 @@ apis:
   humanURL: https://noms.sh/docs
   baseURL: https://api.noms.sh/v1
   tags:
+  - Brands
+  tags_raw:
   - brands
   properties:
   - type: OpenAPI
@@ -127,7 +135,8 @@ apis:
   description: The canonical food-group catalog.
   humanURL: https://noms.sh/docs
   baseURL: https://api.noms.sh/v1
-  tags:
+  tags: []
+  tags_raw:
   - foodGroups
   properties:
   - type: OpenAPI
@@ -140,6 +149,8 @@ apis:
   humanURL: https://noms.sh/docs
   baseURL: https://api.noms.sh/v1
   tags:
+  - Food
+  tags_raw:
   - foods
   properties:
   - type: OpenAPI
@@ -152,6 +163,8 @@ apis:
   humanURL: https://noms.sh/docs
   baseURL: https://api.noms.sh/v1
   tags:
+  - Markets
+  tags_raw:
   - market
   properties:
   - type: OpenAPI
@@ -162,6 +175,8 @@ apis:
   humanURL: https://noms.sh/docs
   baseURL: https://api.noms.sh/v1
   tags:
+  - Nutrients
+  tags_raw:
   - nutrients
   properties:
   - type: OpenAPI
@@ -175,6 +190,8 @@ apis:
   humanURL: https://noms.sh/docs
   baseURL: https://api.noms.sh/v1
   tags:
+  - Usage
+  tags_raw:
   - usage
   properties:
   - type: OpenAPI
