@@ -681,94 +681,6 @@ paths:
               description: 'A strong entity-tag for this exact response. Send it back as `If-None-Match` on your next request for the same URL: if nothing has changed you get a `304 Not Modified` with no body instead of the full page. The tag covers everything the response depends on — your tier and market, `include`, `fields`, `sort`, and the page cursor — so it is only ever valid for the request that produced it.'
 components:
   schemas:
-    Page_FoodGroupSchema_:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/FoodGroupSchema'
-          type: array
-          title: Data
-        links:
-          $ref: '#/components/schemas/PageLinks'
-        meta:
-          $ref: '#/components/schemas/PageMeta'
-      type: object
-      required:
-      - data
-      - links
-      - meta
-      title: Page[FoodGroupSchema]
-    PageMeta:
-      properties:
-        has_more:
-          type: boolean
-          title: Has More
-          description: Whether more pages follow this one (equivalently, whether ``links.next`` is non-null).
-        page_size:
-          type: integer
-          minimum: 1.0
-          title: Page Size
-          description: 'Number of items requested per page: the effective ``page_size`` (the requested value, or the default when ``page_size`` is omitted).'
-      type: object
-      required:
-      - has_more
-      - page_size
-      title: PageMeta
-      examples:
-      - has_more: true
-        page_size: 10
-    FoodGroupSchema:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Stable canonical UPPER_SNAKE code and the `/v1/food-groups/{id}` handle (e.g. `DAIRY`).
-        name:
-          type: string
-          title: Name
-          description: Human-readable display label (e.g. `Dairy`). Searchable, sortable, and filterable.
-        icon_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Icon Url
-          description: 'Public URL of the group''s icon (served from the Noms image CDN); `null` when the group has no icon available. A food in this group gets this icon appended as a fallback image (with `type: icon`) only when it has no real images of its own.'
-      type: object
-      required:
-      - id
-      - name
-      - icon_url
-      title: FoodGroupSchema
-      description: A canonical food group — a stable code plus a curated display name.
-      examples:
-      - icon_url: https://images.noms.sh/dairy-icon-hash
-        id: DAIRY
-        name: Dairy
-    PageLinks:
-      properties:
-        self:
-          type: string
-          maxLength: 2083
-          minLength: 1
-          format: uri
-          title: Self
-          description: Canonical URL of the current page, echoing the request's query parameters.
-        next:
-          anyOf:
-          - type: string
-            maxLength: 2083
-            minLength: 1
-            format: uri
-          - type: 'null'
-          title: Next
-          description: URL of the next page, or ``null`` when this is the last page. The ``cursor`` query parameter is advanced to the next keyset position; all other query parameters are preserved verbatim.
-      type: object
-      required:
-      - self
-      title: PageLinks
-      examples:
-      - next: https://api.noms.sh/v1/foods?page_size=2&cursor=eyJ2IjpbeyJ0IjoicmF3IiwidiI6Ik1pbGsifV0sInMiOiIrbmFtZSJ9
-        self: https://api.noms.sh/v1/foods?page_size=2
     Item_FoodGroupSchema_:
       properties:
         data:
@@ -811,6 +723,94 @@ components:
 
 
         Individual problems add **extension members** on top of these — `retry_after` on a `429`, `supported_columns` on an invalid sort, `errors` on a validation failure. They are documented on the problem itself, under Problems, and a client should ignore any member it does not recognise rather than reject the body.'
+    PageLinks:
+      properties:
+        self:
+          type: string
+          maxLength: 2083
+          minLength: 1
+          format: uri
+          title: Self
+          description: Canonical URL of the current page, echoing the request's query parameters.
+        next:
+          anyOf:
+          - type: string
+            maxLength: 2083
+            minLength: 1
+            format: uri
+          - type: 'null'
+          title: Next
+          description: URL of the next page, or ``null`` when this is the last page. The ``cursor`` query parameter is advanced to the next keyset position; all other query parameters are preserved verbatim.
+      type: object
+      required:
+      - self
+      title: PageLinks
+      examples:
+      - next: https://api.noms.sh/v1/foods?page_size=2&cursor=eyJ2IjpbeyJ0IjoicmF3IiwidiI6Ik1pbGsifV0sInMiOiIrbmFtZSJ9
+        self: https://api.noms.sh/v1/foods?page_size=2
+    FoodGroupSchema:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Stable canonical UPPER_SNAKE code and the `/v1/food-groups/{id}` handle (e.g. `DAIRY`).
+        name:
+          type: string
+          title: Name
+          description: Human-readable display label (e.g. `Dairy`). Searchable, sortable, and filterable.
+        icon_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Icon Url
+          description: 'Public URL of the group''s icon (served from the Noms image CDN); `null` when the group has no icon available. A food in this group gets this icon appended as a fallback image (with `type: icon`) only when it has no real images of its own.'
+      type: object
+      required:
+      - id
+      - name
+      - icon_url
+      title: FoodGroupSchema
+      description: A canonical food group — a stable code plus a curated display name.
+      examples:
+      - icon_url: https://images.noms.sh/dairy-icon-hash
+        id: DAIRY
+        name: Dairy
+    Page_FoodGroupSchema_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/FoodGroupSchema'
+          type: array
+          title: Data
+        links:
+          $ref: '#/components/schemas/PageLinks'
+        meta:
+          $ref: '#/components/schemas/PageMeta'
+      type: object
+      required:
+      - data
+      - links
+      - meta
+      title: Page[FoodGroupSchema]
+    PageMeta:
+      properties:
+        has_more:
+          type: boolean
+          title: Has More
+          description: Whether more pages follow this one (equivalently, whether ``links.next`` is non-null).
+        page_size:
+          type: integer
+          minimum: 1.0
+          title: Page Size
+          description: 'Number of items requested per page: the effective ``page_size`` (the requested value, or the default when ``page_size`` is omitted).'
+      type: object
+      required:
+      - has_more
+      - page_size
+      title: PageMeta
+      examples:
+      - has_more: true
+        page_size: 10
   securitySchemes:
     ApiKey:
       type: apiKey

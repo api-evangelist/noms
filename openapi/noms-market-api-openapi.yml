@@ -173,20 +173,6 @@ paths:
       - ApiKey: []
 components:
   schemas:
-    MarketChoice:
-      properties:
-        market:
-          type: string
-          minLength: 1
-          title: Market
-          description: The market (country code) to scope this account to.
-          examples:
-          - CL
-      type: object
-      required:
-      - market
-      title: MarketChoice
-      description: The market to scope the account to — one of `GET /v1/market`'s `available`.
     MarketResponse:
       properties:
         data:
@@ -203,32 +189,6 @@ components:
           - MX
           - US
           chosen: CL
-    MarketData:
-      properties:
-        chosen:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Chosen
-          description: The market this account is scoped to (a country code), or `null` — either because a single-market tier has not chosen yet, or because the tier serves all markets (see `note`). Every API key the account owns reads the same value.
-        available:
-          items:
-            type: string
-          type: array
-          title: Available
-          description: Every market foods are available in — the valid choices for `PUT`.
-        note:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Note
-          description: Why `chosen` is `null` when it can never be set — present only on a tier that already serves every market. `null` on a single-market tier.
-      type: object
-      required:
-      - chosen
-      - available
-      title: MarketData
-      description: The account's market selection and the markets it may choose from.
     Problem:
       properties:
         title:
@@ -263,6 +223,46 @@ components:
 
 
         Individual problems add **extension members** on top of these — `retry_after` on a `429`, `supported_columns` on an invalid sort, `errors` on a validation failure. They are documented on the problem itself, under Problems, and a client should ignore any member it does not recognise rather than reject the body.'
+    MarketChoice:
+      properties:
+        market:
+          type: string
+          minLength: 1
+          title: Market
+          description: The market (country code) to scope this account to.
+          examples:
+          - CL
+      type: object
+      required:
+      - market
+      title: MarketChoice
+      description: The market to scope the account to — one of `GET /v1/market`'s `available`.
+    MarketData:
+      properties:
+        chosen:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Chosen
+          description: The market this account is scoped to (a country code), or `null` — either because a single-market tier has not chosen yet, or because the tier serves all markets (see `note`). Every API key the account owns reads the same value.
+        available:
+          items:
+            type: string
+          type: array
+          title: Available
+          description: Every market foods are available in — the valid choices for `PUT`.
+        note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Note
+          description: Why `chosen` is `null` when it can never be set — present only on a tier that already serves every market. `null` on a single-market tier.
+      type: object
+      required:
+      - chosen
+      - available
+      title: MarketData
+      description: The account's market selection and the markets it may choose from.
   securitySchemes:
     ApiKey:
       type: apiKey
