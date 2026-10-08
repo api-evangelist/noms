@@ -43,3 +43,35 @@ plans:
         window: custom
         max: null
         scope: account
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - negotiated
+  units: []
+  plans:
+  - name: Taster
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods: []
+  - name: Sous Chef
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Head Chef
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
+  - name: Executive Chef
+    access: other
+    model: negotiated
+    model_how: derived
+    units: []
+    periods: []
