@@ -897,19 +897,6 @@ paths:
               description: 'A strong entity-tag for this exact response. Send it back as `If-None-Match` on your next request for the same URL: if nothing has changed you get a `304 Not Modified` with no body instead of the full page. The tag covers everything the response depends on — your tier and market, `include`, `fields`, `sort`, and the page cursor — so it is only ever valid for the request that produced it.'
 components:
   schemas:
-    FoodMarketCountrySchema:
-      properties:
-        country_code:
-          type: string
-          title: Country Code
-          description: ISO 3166-1 alpha-2 country code, uppercase (e.g. `CL`).
-      type: object
-      required:
-      - country_code
-      title: FoodMarketCountrySchema
-      description: One country a food is sold in, as an ISO 3166-1 alpha-2 code.
-      examples:
-      - country_code: CL
     BrandSchema:
       properties:
         id:
@@ -931,6 +918,183 @@ components:
       examples:
       - id: XoluRyOx9o3C
         name: Blue Diamond
+    Page_FoodDetailSchema_:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/FoodDetailSchema'
+          type: array
+          title: Data
+        links:
+          $ref: '#/components/schemas/PageLinks'
+        meta:
+          $ref: '#/components/schemas/PageMeta'
+      type: object
+      required:
+      - data
+      - links
+      - meta
+      title: Page[FoodDetailSchema]
+    FoodMarketCountrySchema:
+      properties:
+        country_code:
+          type: string
+          title: Country Code
+          description: ISO 3166-1 alpha-2 country code, uppercase (e.g. `CL`).
+      type: object
+      required:
+      - country_code
+      title: FoodMarketCountrySchema
+      description: One country a food is sold in, as an ISO 3166-1 alpha-2 code.
+      examples:
+      - country_code: CL
+    PageMeta:
+      properties:
+        has_more:
+          type: boolean
+          title: Has More
+          description: Whether more pages follow this one (equivalently, whether ``links.next`` is non-null).
+        page_size:
+          type: integer
+          minimum: 1.0
+          title: Page Size
+          description: 'Number of items requested per page: the effective ``page_size`` (the requested value, or the default when ``page_size`` is omitted).'
+      type: object
+      required:
+      - has_more
+      - page_size
+      title: PageMeta
+      examples:
+      - has_more: true
+        page_size: 10
+    FoodServingSizeSchema:
+      properties:
+        unit:
+          type: string
+          enum:
+          - g
+          - ml
+          - cup
+          - tbsp
+          - tsp
+          - L
+          - oz
+          - fl_oz
+          - each
+          title: Unit
+          description: Serving unit. One of the closed 9-value set `{g, ml, cup, tbsp, tsp, L, oz, fl_oz, each}`; never null.
+        descriptor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Descriptor
+          description: Free-text qualifier preserved from the source (e.g. `chopped`); `null` when the unit fully describes the serving.
+        quantity:
+          type: string
+          format: decimal
+          title: Quantity
+          description: Count of `unit`s in one serving (e.g. `1` cup, `30` g). String-encoded decimal.
+        grams:
+          anyOf:
+          - type: string
+            format: decimal
+          - type: 'null'
+          title: Grams
+          description: Absolute weight of this serving in grams — a real mass, never a volume. Populated for a food whose `basis_unit` is `grams`; `null` for a volume-anchored (`milliliters`-basis) food unless the source gave a genuine mass, since deriving a mass from a volume needs the food's density, which we do not guess. String-encoded decimal.
+        milliliters:
+          anyOf:
+          - type: string
+            format: decimal
+          - type: 'null'
+          title: Milliliters
+          description: Absolute volume of this serving in millilitres, when knowable; `null` otherwise. Populated for a food whose `basis_unit` is `milliliters`, and for any serving measured in a volume unit (`1 cup` is 236.588 ml by definition). `null` for a solid measured only by weight — deriving a volume from a mass needs the food's density, which we do not guess. String-encoded decimal.
+        is_default:
+          type: boolean
+          title: Is Default
+          description: Whether this is the food's primary reference serving (exactly one serving per food is the default).
+      type: object
+      required:
+      - unit
+      - descriptor
+      - quantity
+      - grams
+      - milliliters
+      - is_default
+      title: FoodServingSizeSchema
+      description: 'One serving definition, shaped ``{unit, descriptor, quantity, grams,
+
+        milliliters, is_default}``. ``quantity`` is the count of ``unit``s in one
+
+        serving (e.g. ``1`` cup, ``30`` g); ``grams`` and ``milliliters`` are that
+
+        serving''s absolute size in each dimension. Multiply a nutrient''s per-100
+
+        ``value`` by ``serving[food.basis_unit] / 100`` to get its amount in this
+
+        serving — the field the food''s ``basis_unit`` names is **never ``null``**, so
+
+        that lookup always resolves; the other dimension is best-effort and may be
+
+        ``null`` (a volume-anchored food has no per-serving mass, a mass-only solid no
+
+        volume — neither dimension is invented from the other). ``is_default`` marks
+
+        the food''s primary (reference) serving; exactly one serving per food is the
+
+        default. ``descriptor`` is a free-text qualifier preserved from the source
+
+        (e.g. ``chopped``, ``bar, each 2.4 oz``); null when the canonical unit
+
+        already fully describes the serving. ``unit`` is one of the closed 9-value
+
+        serving set and is never null; it is ``each`` when the source names no
+
+        unit.'
+      examples:
+      - descriptor: chopped
+        grams: '170'
+        is_default: true
+        milliliters: '236.5882'
+        quantity: '1'
+        unit: cup
+      - is_default: true
+        milliliters: '250'
+        quantity: '250'
+        unit: ml
+    Problem:
+      properties:
+        title:
+          type: string
+          title: Problem title
+          description: Short, human-readable summary of the problem type.
+        type:
+          type: string
+          title: Problem type
+          description: Stable problem-type URI under `/problems/<slug>`. Relative, so it resolves against the host that served the response. The slug is never renamed — branch on this, not on `title` or `detail`.
+        status:
+          type: integer
+          title: Status code
+          description: The HTTP status code, repeated in the body.
+        detail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Problem detail
+          description: 'Human-readable explanation of *this* occurrence. Free text: it may name concrete values and may change without notice.'
+        doc_url:
+          type: string
+          title: Documentation URL
+          description: Deep link to this problem's entry in these docs, stamped per request against the host that served it. Present on every problem body.
+      type: object
+      required:
+      - type
+      - title
+      - status
+      title: Problem
+      description: 'An **RFC 9457** problem document, served as `application/problem+json`. `type` is a stable, never-renamed URI you can branch on; the other core members are for humans.
+
+
+        Individual problems add **extension members** on top of these — `retry_after` on a `429`, `supported_columns` on an invalid sort, `errors` on a validation failure. They are documented on the problem itself, under Problems, and a client should ignore any member it does not recognise rather than reject the body.'
     Item_FoodDetailSchema_:
       properties:
         data:
@@ -1109,191 +1273,6 @@ components:
           is_default: true
           quantity: '28.0'
           unit: g
-    FoodServingSizeSchema:
-      properties:
-        unit:
-          type: string
-          enum:
-          - g
-          - ml
-          - cup
-          - tbsp
-          - tsp
-          - L
-          - oz
-          - fl_oz
-          - each
-          title: Unit
-          description: Serving unit. One of the closed 9-value set `{g, ml, cup, tbsp, tsp, L, oz, fl_oz, each}`; never null.
-        descriptor:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Descriptor
-          description: Free-text qualifier preserved from the source (e.g. `chopped`); `null` when the unit fully describes the serving.
-        quantity:
-          type: string
-          format: decimal
-          title: Quantity
-          description: Count of `unit`s in one serving (e.g. `1` cup, `30` g). String-encoded decimal.
-        grams:
-          anyOf:
-          - type: string
-            format: decimal
-          - type: 'null'
-          title: Grams
-          description: Absolute weight of this serving in grams — a real mass, never a volume. Populated for a food whose `basis_unit` is `grams`; `null` for a volume-anchored (`milliliters`-basis) food unless the source gave a genuine mass, since deriving a mass from a volume needs the food's density, which we do not guess. String-encoded decimal.
-        milliliters:
-          anyOf:
-          - type: string
-            format: decimal
-          - type: 'null'
-          title: Milliliters
-          description: Absolute volume of this serving in millilitres, when knowable; `null` otherwise. Populated for a food whose `basis_unit` is `milliliters`, and for any serving measured in a volume unit (`1 cup` is 236.588 ml by definition). `null` for a solid measured only by weight — deriving a volume from a mass needs the food's density, which we do not guess. String-encoded decimal.
-        is_default:
-          type: boolean
-          title: Is Default
-          description: Whether this is the food's primary reference serving (exactly one serving per food is the default).
-      type: object
-      required:
-      - unit
-      - descriptor
-      - quantity
-      - grams
-      - milliliters
-      - is_default
-      title: FoodServingSizeSchema
-      description: 'One serving definition, shaped ``{unit, descriptor, quantity, grams,
-
-        milliliters, is_default}``. ``quantity`` is the count of ``unit``s in one
-
-        serving (e.g. ``1`` cup, ``30`` g); ``grams`` and ``milliliters`` are that
-
-        serving''s absolute size in each dimension. Multiply a nutrient''s per-100
-
-        ``value`` by ``serving[food.basis_unit] / 100`` to get its amount in this
-
-        serving — the field the food''s ``basis_unit`` names is **never ``null``**, so
-
-        that lookup always resolves; the other dimension is best-effort and may be
-
-        ``null`` (a volume-anchored food has no per-serving mass, a mass-only solid no
-
-        volume — neither dimension is invented from the other). ``is_default`` marks
-
-        the food''s primary (reference) serving; exactly one serving per food is the
-
-        default. ``descriptor`` is a free-text qualifier preserved from the source
-
-        (e.g. ``chopped``, ``bar, each 2.4 oz``); null when the canonical unit
-
-        already fully describes the serving. ``unit`` is one of the closed 9-value
-
-        serving set and is never null; it is ``each`` when the source names no
-
-        unit.'
-      examples:
-      - descriptor: chopped
-        grams: '170'
-        is_default: true
-        milliliters: '236.5882'
-        quantity: '1'
-        unit: cup
-      - is_default: true
-        milliliters: '250'
-        quantity: '250'
-        unit: ml
-    FoodNutrientSchema:
-      properties:
-        id:
-          type: string
-          title: Id
-          description: Nutrient code (e.g. `PROTEIN`); matches the standalone `/v1/nutrients` id.
-        name:
-          type: string
-          title: Name
-          description: Nutrient display name; trimmable via `fields[nutrients]`.
-        value:
-          type: string
-          format: decimal
-          title: Value
-          description: Amount of this nutrient per **100** of the food's `basis_unit` (`grams` or `milliliters`). Multiply by `serving[basis_unit] / 100` to get the amount in that serving. Serialized as a string to preserve decimal precision.
-        unit:
-          anyOf:
-          - type: string
-            enum:
-            - g
-            - mg
-            - mcg
-            - kcal
-          - type: 'null'
-          title: Unit
-          description: Measurement unit `{g, mg, mcg, kcal}`, or `null` for a dimensionless nutrient.
-      type: object
-      required:
-      - id
-      - name
-      - value
-      - unit
-      title: FoodNutrientSchema
-      description: 'One nutrient measurement attached to a food, shaped ``{id, name,
-
-        value, unit}``. ``id`` is the nutrient''s own code (e.g. ``PROTEIN``) and
-
-        ``name`` its display name, making the embedded object symmetric with the
-
-        standalone ``/v1/nutrients`` resource and the ``brand`` / ``food_group``
-
-        embeds; ``value`` is the measurement specific to this food, expressed
-
-        **per 100** of the food''s ``basis_unit`` (directly comparable across foods;
-
-        multiply by ``serving[basis_unit] / 100`` to get the amount in that
-
-        serving). ``unit`` is one of the closed set ``{g, mg, mcg, kcal}``, or
-
-        ``null`` for a dimensionless nutrient. ``name`` is trimmable via
-
-        ``fields[nutrients]``.'
-      examples:
-      - id: PROTEIN
-        name: Protein
-        unit: g
-        value: '3.2000'
-    Problem:
-      properties:
-        title:
-          type: string
-          title: Problem title
-          description: Short, human-readable summary of the problem type.
-        type:
-          type: string
-          title: Problem type
-          description: Stable problem-type URI under `/problems/<slug>`. Relative, so it resolves against the host that served the response. The slug is never renamed — branch on this, not on `title` or `detail`.
-        status:
-          type: integer
-          title: Status code
-          description: The HTTP status code, repeated in the body.
-        detail:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Problem detail
-          description: 'Human-readable explanation of *this* occurrence. Free text: it may name concrete values and may change without notice.'
-        doc_url:
-          type: string
-          title: Documentation URL
-          description: Deep link to this problem's entry in these docs, stamped per request against the host that served it. Present on every problem body.
-      type: object
-      required:
-      - type
-      - title
-      - status
-      title: Problem
-      description: 'An **RFC 9457** problem document, served as `application/problem+json`. `type` is a stable, never-renamed URI you can branch on; the other core members are for humans.
-
-
-        Individual problems add **extension members** on top of these — `retry_after` on a `429`, `supported_columns` on an invalid sort, `errors` on a validation failure. They are documented on the problem itself, under Problems, and a client should ignore any member it does not recognise rather than reject the body.'
     PageLinks:
       properties:
         self:
@@ -1354,6 +1333,63 @@ components:
       examples:
       - type: photo
         url: https://images.noms.sh/60f440137489aed9240588a68ffebf455102b257021bfa1cde4d6f6b0b28ac6e
+    FoodNutrientSchema:
+      properties:
+        id:
+          type: string
+          title: Id
+          description: Nutrient code (e.g. `PROTEIN`); matches the standalone `/v1/nutrients` id.
+        name:
+          type: string
+          title: Name
+          description: Nutrient display name; trimmable via `fields[nutrients]`.
+        value:
+          type: string
+          format: decimal
+          title: Value
+          description: Amount of this nutrient per **100** of the food's `basis_unit` (`grams` or `milliliters`). Multiply by `serving[basis_unit] / 100` to get the amount in that serving. Serialized as a string to preserve decimal precision.
+        unit:
+          anyOf:
+          - type: string
+            enum:
+            - g
+            - mg
+            - mcg
+            - kcal
+          - type: 'null'
+          title: Unit
+          description: Measurement unit `{g, mg, mcg, kcal}`, or `null` for a dimensionless nutrient.
+      type: object
+      required:
+      - id
+      - name
+      - value
+      - unit
+      title: FoodNutrientSchema
+      description: 'One nutrient measurement attached to a food, shaped ``{id, name,
+
+        value, unit}``. ``id`` is the nutrient''s own code (e.g. ``PROTEIN``) and
+
+        ``name`` its display name, making the embedded object symmetric with the
+
+        standalone ``/v1/nutrients`` resource and the ``brand`` / ``food_group``
+
+        embeds; ``value`` is the measurement specific to this food, expressed
+
+        **per 100** of the food''s ``basis_unit`` (directly comparable across foods;
+
+        multiply by ``serving[basis_unit] / 100`` to get the amount in that
+
+        serving). ``unit`` is one of the closed set ``{g, mg, mcg, kcal}``, or
+
+        ``null`` for a dimensionless nutrient. ``name`` is trimmable via
+
+        ``fields[nutrients]``.'
+      examples:
+      - id: PROTEIN
+        name: Protein
+        unit: g
+        value: '3.2000'
     FoodGroupSchema:
       properties:
         id:
@@ -1381,42 +1417,6 @@ components:
       - icon_url: https://images.noms.sh/dairy-icon-hash
         id: DAIRY
         name: Dairy
-    Page_FoodDetailSchema_:
-      properties:
-        data:
-          items:
-            $ref: '#/components/schemas/FoodDetailSchema'
-          type: array
-          title: Data
-        links:
-          $ref: '#/components/schemas/PageLinks'
-        meta:
-          $ref: '#/components/schemas/PageMeta'
-      type: object
-      required:
-      - data
-      - links
-      - meta
-      title: Page[FoodDetailSchema]
-    PageMeta:
-      properties:
-        has_more:
-          type: boolean
-          title: Has More
-          description: Whether more pages follow this one (equivalently, whether ``links.next`` is non-null).
-        page_size:
-          type: integer
-          minimum: 1.0
-          title: Page Size
-          description: 'Number of items requested per page: the effective ``page_size`` (the requested value, or the default when ``page_size`` is omitted).'
-      type: object
-      required:
-      - has_more
-      - page_size
-      title: PageMeta
-      examples:
-      - has_more: true
-        page_size: 10
   securitySchemes:
     ApiKey:
       type: apiKey
