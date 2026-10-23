@@ -880,3 +880,9 @@ x-tagGroups:
   - api-version-removed
   - validation-error
   - internal-server-error
+x-provenance:
+  method: harvested
+  publisher: Noms
+  source: https://api.noms.sh/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
