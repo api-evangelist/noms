@@ -64,5 +64,136 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Noms is a company surfaced via the API Evangelist harvest backlog (source: new-submission) and added to the network as a stub for full-pipeline profiling.
-- https://noms.sh
+Noms provides a comprehensive nutrition data API covering 3.7 million foods and 298,000 brands across 230 countries. The service offers detailed nutrient information, barcode lookup, and food images, all accessible via a RESTful interface. It includes a free tier with no credit card required, extensive documentation, and support resources to help developers integrate nutritional data into applications.
+
+**Areas:** Company · Nutrition · Food · Data · Health
+
+## Noms on APIs.io
+
+Everything profiled for Noms is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/noms/](https://apis.io/providers/noms/)** — or go straight to one of the APIs or properties below.
+
+### APIs (7)
+
+- [Noms API](https://apis.io/apis/noms/noms-api/) — REST API for nutrition data covering 3.7M foods and 298K brands.
+- [Noms Brands API](https://apis.io/apis/noms/noms-brands-api/) — The brand catalog — the names foods are sold under, and the `/v1/brands/{id}` handle each `brand_id` points at.
+- [Noms Food Groups API](https://apis.io/apis/noms/noms-foodgroups-api/) — The canonical food-group catalog.
+- [Noms Foods API](https://apis.io/apis/noms/noms-foods-api/) — The food catalog. Search, filter, sort, and embed related brand / food-group / nutrient detail via `include=`.
+- [Noms Market API](https://apis.io/apis/noms/noms-market-api/) — Read and set your account's market. Free-tier accounts serve one chosen market, shared by every key they own; set it before querying foods (paid plans serve…
+- [Noms Nutrients API](https://apis.io/apis/noms/noms-nutrients-api/) — The canonical nutrient catalog (codes, units, hierarchy).
+- [Noms Usage API](https://apis.io/apis/noms/noms-usage-api/) — Your **account's** usage against its quota for the current window — the total across every key you hold, which is what enforcement compares against. Poll it…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [noms-mcp.yml](https://apis.io/servers/noms/noms-mcp-yml/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Noms Agentic Access](https://apis.io/agentic-access/noms/noms-agentic-access/)
+
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Noms Context](https://apis.io/jsonld/noms/noms-context/)
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [Noms API Rules](https://apis.io/rules/noms/noms-rules/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Noms Authentication](https://apis.io/security/noms/noms-authentication/)
+- [Noms Domain Security](https://apis.io/security/noms/noms-domain-security/)
+- [Noms Vulnerability Disclosure](https://apis.io/security/noms/noms-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Noms Plans Pricing](https://apis.io/plans/noms/noms-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Noms Rate Limits](https://apis.io/rate-limits/noms/noms-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://noms.sh)
+- [Documentation](https://noms.sh/docs)
+- [Getting started](https://noms.sh/docs/quickstart)
+- [API reference](https://noms.sh/llms.txt)
+- [Pricing](https://noms.sh/pricing)
+- [Support](https://noms.sh/docs/support)
+- [Terms of service](https://noms.sh/terms)
+- [Privacy policy](https://noms.sh/privacy)
+
+## API Evangelist rating
+
+**Kin Score 57.3** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 62.9 |
+| Contract governance | 19.7 |
+| Operational transparency | 42.1 |
+| Developer ergonomics | 50.0 |
+| Access clarity | 76.3 |
+
+**Agent readiness 36.7** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | verified |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | paginated |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 24.2** — Health
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/noms/](https://apis.io/providers/noms/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Noms: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/noms/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
